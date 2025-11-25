@@ -1,0 +1,15 @@
+[Unit]
+Description=Item Tracker Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/fixed_service.sh
+Restart=on-failure
+RestartSec=5s
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+# TODO: add User/Group, EnvironmentFile, and hardening options.
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,6 @@
 # Module B – Mock Exams
 
-This module contains timed Coderbyte-style DevOps mock assignments.
+Each exam folder contains `instructions.md`, a `start_exam.sh` timer, and a `starter/` workspace (plus tests where relevant).
 
 - `exam_01` – Web service + Docker + Terraform + K8s
 - `exam_02` – Log pipeline + S3 + CI pipeline
@@ -11,6 +11,6 @@ This module contains timed Coderbyte-style DevOps mock assignments.
 - `exam_07` – SRE & Observability
 - `exam_08` – Container Image Security
 - `exam_09` – Linux Systems Debugging
-- `exam_10` – Serverless Architecture
+- `exam_10` – Serverless Architecture (Lambda + API Gateway + DynamoDB; tests in `exam_10/tests`)
 
-Run via root Makefile or the interactive menu.
+Run an exam with the corresponding `exam_##/start_exam.sh`.

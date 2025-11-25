@@ -1,0 +1,81 @@
+pipeline {
+  agent any
+
+  parameters {
+    string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag')
+    string(name: 'REGISTRY', defaultValue: 'ghcr.io/your-org/jenkins-demo', description: 'Image registry/repo')
+  }
+
+  environment {
+    IMAGE = "${params.REGISTRY}:${params.IMAGE_TAG}"
+    WORKDIR = "modules/B_mock_exam/exam_05/starter"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Dependencies') {
+      steps {
+        dir(env.WORKDIR) {
+          sh 'python -m pip install --upgrade pip'
+          sh 'pip install -r app/requirements.txt'
+          sh 'pip install pytest'
+        }
+      }
+    }
+
+    stage('Unit Tests') {
+      steps {
+        dir(env.WORKDIR) {
+          sh 'PYTHONPATH=. pytest -q tests'
+        }
+      }
+      post {
+        always {
+          junit "${env.WORKDIR}/tests/**/*.xml"
+        }
+      }
+    }
+
+    stage('Lint') {
+      steps {
+        dir(env.WORKDIR) {
+          sh 'pip install flake8'
+          sh 'flake8 app'
+        }
+      }
+    }
+
+    stage('Build Image') {
+      steps {
+        sh 'docker build -t ${IMAGE} ${WORKDIR}'
+      }
+    }
+
+    stage('Security Scan') {
+      steps {
+        sh 'echo "TODO: run Trivy or similar"'
+      }
+    }
+
+    stage('Push') {
+      when {
+        expression { return env.REGISTRY != '' }
+      }
+      steps {
+        sh 'echo "Login to registry before enabling push"'
+        sh 'docker push ${IMAGE}'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh 'echo "Deploy stage placeholder (helm/kubectl/ansible)"'
+      }
+    }
+  }
+}

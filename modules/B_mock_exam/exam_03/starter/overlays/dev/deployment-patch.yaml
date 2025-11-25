@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitops-demo
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: gitops-demo
+          image: ghcr.io/example/gitops-demo:dev
+          env:
+            - name: LOG_LEVEL
+              value: debug

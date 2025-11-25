@@ -1,0 +1,7 @@
+resources:
+  - ../../app
+
+nameSuffix: -prod
+
+patchesStrategicMerge:
+  - deployment-patch.yaml
