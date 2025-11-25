@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+.vscode/
+.idea/
+*.log
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.swp
+*.swo
+.DS_Store

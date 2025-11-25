@@ -1,0 +1,36 @@
+name: log-pipeline-ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Run tests (if present)
+      run: |
+        if ls **/tests.py 1> /dev/null 2>&1; then
+          for t in $(find . -name 'tests.py'); do
+            echo "Running $t"
+            python "$t"
+          done
+        else
+          echo "No tests found."
+        fi
+
+    - name: Build Docker image
+      run: |
+        docker build -t registry.example.com/log-processor:latest .
+
+    - name: Push Docker image (placeholder)
+      run: |
+        echo "Here you would 'docker login' and 'docker push'."

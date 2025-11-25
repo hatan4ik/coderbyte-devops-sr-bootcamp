@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-health
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-health
+  template:
+    metadata:
+      labels:
+        app: web-health
+    spec:
+      containers:
+      - name: web-health
+        image: your-registry/health-app:latest
+        ports:
+        - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 2
+          periodSeconds: 5
