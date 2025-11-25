@@ -1,22 +1,30 @@
-# Backup Script 03 – Automated Directory Backup
+# JSON Filter 02 – Active Users
 
-Write a Bash script that creates a compressed backup of a specified directory.
+Write a Python script that:
 
-The script must:
-1.  Accept two arguments: the source directory to back up and the destination directory where the backup file will be stored.
-2.  Create a `tar.gz` archive of the source directory.
-3.  The archive filename must be in the format: `backup_YYYY-MM-DD_HHMMSS.tar.gz`.
-4.  Print the full path to the created backup file on success.
-5.  Exit with a non-zero status code and print an error message if the number of arguments is incorrect, or if the source directory does not exist.
+1. Reads `users.json` from the current directory.
+2. Filters only users where `active` is `true`.
+3. Prints them as pretty JSON.
 
-Example usage:
+Example input:
 
-```sh
-./solution.sh /var/log /tmp/backups
+```json
+[
+  {"name": "alice", "active": true},
+  {"name": "bob", "active": false}
+]
 ```
 
 Expected output:
 
-```text
-/tmp/backups/backup_2024-11-03_123000.tar.gz
+```json
+[
+  {"name": "alice", "active": true}
+]
 ```
+
+Requirements:
+
+- Implement `filter_active_users(path: str) -> list`.
+- Use `json` module.
+- When run as script, read `users.json` and print filtered list.
