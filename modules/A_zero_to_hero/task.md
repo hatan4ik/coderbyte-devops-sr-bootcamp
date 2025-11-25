@@ -1,23 +1,15 @@
-# File Word Count 04 – Text File Analyzer
+# API Client 06 – Public API Fetcher
 
-Write a Python script that analyzes a given text file and reports the number of lines, words, and characters.
+Write a Python script that fetches user data from the JSONPlaceholder public API and prints the name and email of the first user.
 
-The script should:
-1.  Accept a single command-line argument: the path to the file to analyze.
-2.  Read the file and calculate the total number of lines, words, and characters.
-3.  Print the results in a JSON format.
-4.  Handle the case where the file does not exist.
+The script must:
+1.  Make an HTTP GET request to `https://jsonplaceholder.typicode.com/users`.
+2.  Parse the JSON response.
+3.  Extract and print the `name` and `email` of the first user in the list.
+4.  Use the `requests` library.
 
-Example usage:
-```sh
-python solution.py sample.txt
+Expected output:
 ```
-
-Example output:
-```json
-{
-  "lines": 10,
-  "words": 152,
-  "characters": 850
-}
+Name: Leanne Graham
+Email: Sincere@april.biz
 ```
