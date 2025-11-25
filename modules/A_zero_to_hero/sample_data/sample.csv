@@ -1,0 +1,7 @@
+server_name,cpu_usage,memory_gb,disk_usage,status
+web-01,45.2,8,67,active
+web-02,52.1,8,72,active
+db-01,78.5,16,45,active
+cache-01,12.3,4,23,maintenance
+api-01,65.4,12,89,active
+worker-01,34.7,6,56,active
