@@ -1,19 +1,14 @@
 terraform {
   required_version = ">= 1.5.0"
-
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
-    }
   }
 
-  # A. Principal Architect: Add a remote backend for state management
   backend "s3" {
+    # This would be configured for a real environment
   }
 }
 
@@ -44,46 +39,16 @@ variable "tags" {
   description = "Tags to apply to resources"
   default = {
     ManagedBy   = "Terraform"
-    Project     = "CoderbyteExam"
-    Environment = "dev"
+    Project     = "CoderbyteExam01"
+    Environment = "dev" # This should match var.environment
   }
 }
 
-# A. Principal Architect & E. Cloud Architect: Use a random suffix for globally unique bucket name
-resource "random_id" "bucket_suffix" {
-  byte_length = 4
-}
+# Call the reusable S3 bucket module
+module "app_bucket" {
+  source = "../../../../../modules/aws-s3-bucket" # Adjust path as needed
 
-resource "aws_s3_bucket" "example_bucket" {
-  bucket = "${var.bucket_base_name}-${var.environment}-${random_id.bucket_suffix.hex}"
-
-  # E. Cloud Architect: Apply tags for cost allocation and organization
-  tags = var.tags
-}
-
-# D. SRE Specialist: Enable versioning for reliability and data recovery
-resource "aws_s3_bucket_versioning" "example_bucket" {
-  bucket = aws_s3_bucket.example_bucket.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-# H. Security/DevSecOps Expert: Enforce server-side encryption
-resource "aws_s3_bucket_server_side_encryption_configuration" "example_bucket" {
-  bucket = aws_s3_bucket.example_bucket.id
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-# H. Security/DevSecOps Expert: Block all public access to the bucket
-resource "aws_s3_bucket_public_access_block" "example_bucket" {
-  bucket                  = aws_s3_bucket.example_bucket.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  bucket_base_name = var.bucket_base_name
+  environment      = var.environment
+  tags             = var.tags
 }
