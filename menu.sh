@@ -32,14 +32,16 @@ handle_choice() {
       clear
       echo ">>> Mock Exams"
       echo "Available exams:"
-      echo "  1) Mock Exam #1 (Web + Docker + TF + K8s)"
-      echo "  2) Mock Exam #2 (Log pipeline + S3 + CI)"
+      for i in {1..10}; do
+        num=$(printf "%02d" "$i")
+        title=$(grep -m 1 "Challenge:" "${ROOT_DIR}/modules/B_mock_exam/exam_${num}/task.md" | sed 's/Challenge: //')
+        echo "  $i) $title"
+      done
       echo
-      read -rp "Select exam [1-2]: " ex
-      if [[ "$ex" == "1" ]]; then
-        bash "${ROOT_DIR}/modules/B_mock_exam/exam_01/start_exam.sh"
-      elif [[ "$ex" == "2" ]]; then
-        bash "${ROOT_DIR}/modules/B_mock_exam/exam_02/start_exam.sh"
+      read -rp "Select exam [1-10]: " ex
+      if [[ "$ex" -ge 1 && "$ex" -le 10 ]]; then
+        num=$(printf "%02d" "$ex")
+        bash "${ROOT_DIR}/modules/B_mock_exam/exam_${num}/start_exam.sh"
       else
         echo "Unknown exam: $ex"
       fi
