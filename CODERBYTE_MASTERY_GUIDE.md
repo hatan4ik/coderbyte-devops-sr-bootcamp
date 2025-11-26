@@ -292,6 +292,7 @@ terraform state show <resource>
 - Security policy demo: `practice_examples/security-policy/` (Conftest/OPA policies for k8s+Terraform, cosign verification helper).
 - Observability/SLO demo: `practice_examples/observability-slo/` (Flask app with metrics + alert rules).
 - Networking/Linux debug: `practice_examples/networking-debug/` (CPU hog drill, CoreDNS/DNS scenario with test pod).
+- Concurrent log streamer: `practice_examples/log-streamer/` (streaming multi-file error counts, concurrency, tests).
 
 ### Week 5-6: Expert (Proficient → Hero)
 
