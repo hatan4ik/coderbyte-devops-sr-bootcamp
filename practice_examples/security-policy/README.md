@@ -8,6 +8,7 @@ Minimal example showing how to enforce signed images and scan IaC using Conftest
 - `conftest.sh` — Run Conftest on sample manifests and Terraform plan JSON.
 - `samples/` — Sample Kubernetes Deployment and Terraform plan output for testing.
 - `verify_cosign.sh` — Verify image signatures with cosign if configured.
+- `gatekeeper/` — Gatekeeper ConstraintTemplate + Constraint to require trusted/signed images.
 
 ## Usage
 ```bash
