@@ -1153,3 +1153,84 @@ Before you're ready:
 **Remember**: Coderbyte assessments test both technical skills AND production mindset. Show them you think like a senior engineer who ships to production daily.
 
 **Good luck! 🚀**
+
+---
+
+## 🧩 Domain Practice Problems (Problem → Solution → Tests)
+
+### Bash/Linux
+- **Problem:** Parse log and emit top 5 IPs with counts.  
+  **Solution:** `awk '{print $1}' | sort | uniq -c | sort -nr | head -5`; add arg validation and usage.  
+  **Test:** Fixture log; assert lines count; handle missing file (exit 1).
+- **Problem:** Service check with retry/backoff.  
+  **Solution:** loop with `curl -fsS`, exponential backoff, timeout; exit non-zero on failure.  
+  **Test:** Mock HTTP server returning 500 then 200; assert exit code.
+
+### Python
+- **Problem:** Filter JSON array by predicate, support stdin/file.  
+  **Solution:** `argparse`, load JSON, filter with lambda, print pretty JSON; handle decode errors.  
+  **Test:** Parametrized pytest for stdin/file; invalid JSON raises SystemExit.
+- **Problem:** Concurrent URL fetch with timeout & metrics.  
+  **Solution:** `asyncio` + `aiohttp` with semaphore, gather results; record timings; retry once.  
+  **Test:** Spin up httpbin; assert successes/failures counted; timeout respected.
+
+### Go
+- **Problem:** Tail file and count ERROR per minute (streaming).  
+  **Solution:** Use bufio.Scanner, time-bucket map, channel + goroutine; handle file rotation.  
+  **Test:** Write temp file with timestamps; append errors; assert counts update.
+- **Problem:** HTTP server with `/health`, `/metrics`, graceful shutdown.  
+  **Solution:** `net/http`, context cancel on SIGTERM, Prometheus client.  
+  **Test:** hit endpoints; send SIGTERM; ensure server stops within timeout.
+
+### Containers/K8s
+- **Problem:** Fix Dockerfile (size/run as root/no healthcheck).  
+  **Solution:** Multi-stage slim base, non-root, `.dockerignore`, `HEALTHCHECK`, pinned deps.  
+  **Test:** `docker build`, `hadolint`, `trivy` with no HIGH/CRIT; run container and curl `/health`.
+- **Problem:** Harden Deployment and restrict traffic.  
+  **Solution:** Add probes, limits, securityContext (non-root, read-only), PDB, HPA, anti-affinity, NetworkPolicy default-deny + allow ingress controller/monitoring.  
+  **Test:** `kubeconform` validate; `kubectl auth can-i` checks; curl from allowed/blocked pods.
+
+### Terraform/Cloud
+- **Problem:** S3 bucket with least-privilege IAM and state hygiene.  
+  **Solution:** bucket + versioning + SSE + block public, lifecycle; IAM policy Get/Put/List only; remote state config.  
+  **Test:** `terraform fmt/validate`, tflint, tfsec; check outputs names are tagged.
+- **Problem:** VPC with private/public subnets + peering.  
+  **Solution:** VPC, IGW/NAT, route tables, SG least privilege, VPC peering routes both ways.  
+  **Test:** `terraform plan` clean; tfsec; expected CIDRs present.
+
+### CI/CD
+- **Problem:** Build pipeline with gates.  
+  **Solution:** Jobs: pre-commit (ruff/black/yamllint/shellcheck/hadolint) → pytest → docker build → trivy scan → terraform fmt/validate/tflint/tfsec; push on main with creds.  
+  **Test:** Pipeline passes locally with `act`/runner; secrets absent → push skipped gracefully.
+- **Problem:** Reusable workflow calling module tests.  
+  **Solution:** Composite/reusable Actions with matrix across modules; SARIF uploads; environment protections.  
+  **Test:** Called workflow returns success/fail per matrix; required checks enforced.
+
+### Security/DevSecOps
+- **Problem:** Remove plaintext secrets; add scanning.  
+  **Solution:** Move to env/secret manager; add gitleaks, semgrep, dep scan; enforce HTTPS.  
+  **Test:** gitleaks/semgrep pass; app reads secret from env; no secret in repo.
+- **Problem:** Supply-chain guardrails.  
+  **Solution:** SBOM (syft), sign images (cosign), policy check (Conftest/Gatekeeper), CVE triage workflow.  
+  **Test:** Verify signature; policy denies unsigned; trivy report clean.
+
+### Observability/SRE
+- **Problem:** Add golden-signal metrics to API.  
+  **Solution:** Expose request count/latency/error metrics, `/health` `/ready`, structured logs.  
+  **Test:** scrape metrics; unit test counts increment; readiness toggles on dependency check.
+- **Problem:** Alert fatigue cleanup.  
+  **Solution:** SLOs + burn-rate alerts, dedup labels, runbooks linked.  
+  **Test:** Simulate traffic/error to trigger alert; ensure only one page fires; runbook link present.
+
+### Networking/Linux
+- **Problem:** Diagnose high CPU process.  
+  **Solution:** `ps/top/htop`, `strace -p`, `lsof`, perf sample; identify tight loop or I/O wait.  
+  **Test:** Create CPU-hog script; ensure checklist identifies it within minutes.
+- **Problem:** Intermittent DNS failures in cluster.  
+  **Solution:** `dig/nslookup` against kube-dns, check iptables/CNI, inspect CoreDNS logs, add probe.  
+  **Test:** Inject bad ConfigMap; ensure detection and rollback steps clear the issue.
+
+### GitOps
+- **Problem:** Drift and orphaned resources.  
+  **Solution:** ArgoCD app with auto-prune/auto-heal; Kustomize overlays; appproject RBAC.  
+  **Test:** Delete live resource; Argo reconciles; unauthorized app path is denied.
