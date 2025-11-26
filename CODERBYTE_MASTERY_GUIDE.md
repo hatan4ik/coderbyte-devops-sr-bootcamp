@@ -279,6 +279,11 @@ terraform state show <resource>
 - **Hero:** Streaming/large-file safe.  
   **Solution:** Generator/iterators, concurrency for multiple files, metrics on throughput/errors, output to S3 with retries/backoff, structured logging, unit/integration tests.
 
+**Repo examples you can run now:**
+- Bash top IPs: `practice_examples/bash-top-ips/` (`./top_ips.sh access.log [N]`, `./tests.sh`).
+- Python concurrent fetcher: `practice_examples/python-concurrent-fetch/` (`python fetch.py <urls>`, `python tests.py`).
+- Go HTTP service: `practice_examples/go-http-service/` (`go run ./...`, `go test ./...`).
+
 ### Week 5-6: Expert (Proficient → Hero)
 
 #### Production Patterns
