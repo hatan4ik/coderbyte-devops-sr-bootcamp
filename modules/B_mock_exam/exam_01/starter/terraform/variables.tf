@@ -1,33 +1,34 @@
-variable "bucket_base_name" {
+variable "region" {
   type        = string
-  description = "Base name for the S3 bucket. A random suffix will be added."
+  description = "AWS region for the deployment."
+  default     = "us-east-1"
 }
 
 variable "environment" {
   type        = string
-  description = "Deployment environment, e.g. dev/stage/prod"
+  description = "Deployment environment, e.g., dev, staging, prod."
+  default     = "dev"
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "The environment must be one of: dev, staging, prod."
+  }
+}
+
+variable "project_name" {
+  type        = string
+  description = "The name of the project."
+  default     = "coderbyte-exam-01"
+}
+
+variable "bucket_base_name" {
+  type        = string
+  description = "Base name for the S3 bucket."
+  default     = "app-data"
 }
 
 variable "tags" {
   type        = map(string)
-  description = "A map of tags to assign to the bucket."
+  description = "Additional tags to apply to resources."
   default     = {}
-}
-
-variable "enable_versioning" {
-  type        = bool
-  description = "If true, versioning will be enabled on the bucket."
-  default     = true
-}
-
-variable "block_public_access" {
-  type        = bool
-  description = "If true, all public access to the bucket will be blocked."
-  default     = true
-}
-
-variable "sse_algorithm" {
-  type        = string
-  description = "The server-side encryption algorithm to use. For example, AES256 or aws:kms."
-  default     = "AES256"
 }

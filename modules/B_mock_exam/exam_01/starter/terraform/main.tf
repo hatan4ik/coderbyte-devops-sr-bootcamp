@@ -82,7 +82,22 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "app" {
   }
 }
 
-output "bucket_name" {
-  value       = aws_s3_bucket.app.bucket
-  description = "Name of the provisioned bucket."
+# SRE: Enable access logging for security audits and operational troubleshooting.
+resource "aws_s3_bucket_logging" "app" {
+  bucket = aws_s3_bucket.app.id
+
+  # In a real project, this would be a separate, dedicated logging bucket.
+  # For this exam, we log to the bucket itself under a 'logs/' prefix.
+  target_bucket = aws_s3_bucket.app.id
+  target_prefix = "logs/"
+}
+
+output "bucket_id" {
+  value       = aws_s3_bucket.app.id
+  description = "The ID (name) of the provisioned S3 bucket."
+}
+
+output "bucket_arn" {
+  value       = aws_s3_bucket.app.arn
+  description = "The ARN of the provisioned S3 bucket."
 }
