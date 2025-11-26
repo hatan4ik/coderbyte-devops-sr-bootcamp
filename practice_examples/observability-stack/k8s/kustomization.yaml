@@ -5,3 +5,5 @@ resources:
   - deployment.yaml
   - service.yaml
   - alerts.yaml
+  - prometheus-scrape.yaml
+  - alertmanager.yaml

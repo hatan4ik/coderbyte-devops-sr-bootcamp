@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: observability-slo-alertmanager
+  labels:
+    app: observability-slo
+  namespace: default
+  annotations:
+    note: "Example Alertmanager config"
+data:
+  alertmanager.yml: |
+    route:
+      receiver: 'default'
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+    receivers:
+      - name: 'default'
+        # Add email/webhook/slack here
+        webhook_configs:
+          - url: 'http://alert-collector.local/alerts'
