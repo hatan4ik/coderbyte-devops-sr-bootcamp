@@ -1,6 +1,17 @@
 # 🎯 Coderbyte DevOps Assessment Mastery Guide
 ## Zero → Hero → Offer Letter
 
+### Recommended Learning Order (Architecture & Engineering Path)
+1. **Foundations** – Module A Bash/Python/Go tasks (daily reps); Bash/Python/Go practice labs (`practice_examples/bash-top-ips`, `python-concurrent-fetch`, `go-http-service`, `log-streamer`).
+2. **Containers** – Harden Dockerfiles and supply chain (`container-sbom`, `helm-policy`); run image scans/signing.
+3. **Kubernetes** – Hardening + canary + quotas (`k8s-hardening`, `k8s-canary`, `k8s-resource-quota`); GitOps samples (Module B exam_03).
+4. **Terraform/Cloud** – VPC/VPC-peering/budgets (`terraform-vpc`, `terraform-vpc-peering`, `aws-budget`); IaC security labs (`security-policy` Terraform rego).
+5. **CI/CD** – Pipeline demo (`ci-pipeline`), templates in `ci-templates/`; Jenkins/Actions in Module B exam_05/exam_02.
+6. **Security/Policy** – OPA/Conftest/Gatekeeper/Kyverno (`security-policy`), cosign verification.
+7. **Observability/SRE** – App metrics/alerts (`observability-slo`), K8s wiring + dashboard (`observability-stack`), SLO/burn-rate alerting.
+8. **Resiliency/Networking** – Chaos drill, DNS/CNI drills (`networking-debug`, `chaos-drill`, `networking-debug/cni-misroute`).
+9. **Mock Exams & Full Project** – Module B timed exams; Module C full project (Docker/K8s/Terraform/CI).
+
 ---
 
 ## 🏛️ Board Members & Roles
