@@ -212,6 +212,23 @@ This repository has been transformed into an **enterprise-ready, production-grad
 - **Test Coverage**: 80%+
 - **Deployment**: Zero downtime
 
+## Platform-Ready Scenarios (GitHub/GitLab/Azure DevOps)
+
+### GitHub
+- **Foundation**: Actions workflow to lint/test/build/push with cache, branch protection requiring checks and signed commits.
+- **Intermediate**: Reusable workflows (lint, terraform-checks) with OIDC to AWS, SARIF uploads (Trivy/tfsec/Semgrep), CODEOWNERS enforcement.
+- **Advanced**: Matrix builds (amd64/arm64) with SBOM/provenance, environment promotions via environments + required reviewers, GitOps triggers to ArgoCD/Flux.
+
+### GitLab
+- **Foundation**: `.gitlab-ci.yml` stages (lint/test/build) with protected variables, non-root Docker builds, cache artifacts.
+- **Intermediate**: Multi-project pipelines, Terraform plan/apply with approvals, container/SAST/secret scans; review app teardown on MR close.
+- **Advanced**: Dynamic review apps, Helm deploys with rollback, compliance pipelines enforcing license and security policies across groups.
+
+### Azure DevOps
+- **Foundation**: YAML pipeline jobs for lint/test/build, variable groups, secure files; ACR push using managed identity.
+- **Intermediate**: Multi-stage (CI→QA→Prod) with approvals/gates, Terraform using remote state + Key Vault secrets, AKS blue/green or canary with health gates.
+- **Advanced**: Template-based reusable stages, policy gates (Checkov/tfsec) blocking merges, signed images (cosign) + SBOM publish, Defender for Cloud hooks.
+
 ## Compliance & Standards
 
 ### Frameworks
