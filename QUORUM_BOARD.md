@@ -9,6 +9,7 @@
 - **CI/CD & Automation Guru**: GitHub Actions, ADO, GitLab, Jenkins; reusable templates, gates, artifact signing, SBOM.
 - **Containers + K8s Engineer**: Dockerfile optimization, Helm/Kustomize, clusters (EKS/AKS/RKE2), probes/limits, NetPol/PDB/HPA.
 - **Security/DevSecOps Expert**: Scanning (SAST/SCA/Trivy/tfsec), OPA/Conftest, signing (cosign), policy enforcement, CVE triage.
+- **Publishing Editor (O’Reilly-style)**: Ensures docs/readmes are structured, concise, and actionable; enforces zero-to-hero narrative, consistent terminology, and cross-links from guidance to runnable labs and modules.
 
 ## Assessment Types (What You Will Face)
 - **Short scripts**: Bash/Python/Go utilities (parsers, health checks, file ops).

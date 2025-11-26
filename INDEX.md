@@ -18,12 +18,14 @@ coderbyte-devops-sr-bootcamp/
 
 ## 📚 Quick Navigation
 
-### Getting Started
-- [README.md](README.md) - Main overview
-- [ARCHITECTURE.md](ARCHITECTURE.md) - System design
-- [BEST_PRACTICES.md](BEST_PRACTICES.md) - Guidelines
-- [SECURITY.md](SECURITY.md) - Security policies
-- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
+### Getting Started (read in order)
+1. [README.md](README.md) - Main overview
+2. [ARCHITECTURE.md](ARCHITECTURE.md) - System design
+3. [ENGINEERING.md](ENGINEERING.md) - Standards & workflows
+4. [BEST_PRACTICES.md](BEST_PRACTICES.md) - Guidelines
+5. [SECURITY.md](SECURITY.md) - Security policies
+6. [CODERBYTE_MASTERY_GUIDE.md](CODERBYTE_MASTERY_GUIDE.md) - Zero→Hero path
+7. [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
 
 ### Module A - Zero to Hero
 **Location**: `modules/A_zero_to_hero/`
@@ -186,22 +188,7 @@ make k8s-deploy
 ```
 
 ## 🎯 Learning Paths
-
-### Beginner (Weeks 1-2)
-1. Module A - Bash/Python basics (daily reps)
-2. Practice labs (scripting) - `practice_examples/bash-top-ips`, `python-concurrent-fetch`, `go-http-service`
-3. Module D - Practice challenges
-
-### Intermediate (Weeks 3-4)
-1. Containers/K8s/Terraform labs - `container-sbom`, `k8s-hardening`, `terraform-vpc`
-2. Module C - Full project overview
-3. Module B - Exams 1-3; Module A - Go basics
-
-### Advanced (Weeks 5-8)
-1. CI/CD + Security/Policy labs - `ci-pipeline`, `security-policy`, `helm-policy`
-2. Observability/SRE labs - `observability-slo`, `observability-stack`
-3. Module B - Exams 4-10; Resiliency/Networking labs (`chaos-drill`, `networking-debug`)
-4. Module E - Custom plan (job-aligned)
+Follow the zero→hero sequence in `CODERBYTE_MASTERY_GUIDE.md` (Foundations → Containers → K8s → Terraform/Cloud → CI/CD → Security → Observability → Resiliency → Mock Exams/Full Project).
 
 ## 📊 Progress Tracking
 
