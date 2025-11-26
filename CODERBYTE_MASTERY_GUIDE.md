@@ -283,6 +283,9 @@ terraform state show <resource>
 - Bash top IPs: `practice_examples/bash-top-ips/` (`./top_ips.sh access.log [N]`, `./tests.sh`).
 - Python concurrent fetcher: `practice_examples/python-concurrent-fetch/` (`python fetch.py <urls>`, `python tests.py`).
 - Go HTTP service: `practice_examples/go-http-service/` (`go run ./...`, `go test ./...`).
+- Container SBOM/signing demo: `practice_examples/container-sbom/` (`./build_and_sign.sh <image>`).
+- K8s hardening bundle: `practice_examples/k8s-hardening/` (kustomize apply/validate).
+- Terraform VPC starter: `practice_examples/terraform-vpc/` (fmt/validate/plan).
 
 ### Week 5-6: Expert (Proficient → Hero)
 
