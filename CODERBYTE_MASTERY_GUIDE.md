@@ -287,6 +287,7 @@ terraform state show <resource>
 - K8s hardening bundle: `practice_examples/k8s-hardening/` (kustomize apply/validate).
 - Terraform VPC starter: `practice_examples/terraform-vpc/` (fmt/validate/plan).
 - CI pipeline demo (GitHub Actions): `practice_examples/ci-pipeline/` (ruff/black/pytest → docker build → trivy scan; template workflow in `github-actions.yaml`).
+- Security policy demo: `practice_examples/security-policy/` (Conftest/OPA policies for k8s+Terraform, cosign verification helper).
 
 ### Week 5-6: Expert (Proficient → Hero)
 
