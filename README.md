@@ -85,6 +85,7 @@ cd modules/A_zero_to_hero
   - `.github/workflows/full-project-ci.yaml` – lint/test/build/scan for Module C.
   - `.github/workflows/terraform-checks.yaml` – fmt/validate/tflint/tfsec across Terraform stacks.
   - `.github/workflows/security-scan.yaml` – Trivy, gitleaks, Semgrep.
+- **Playbook**: see `ENGINEERING.md` for coding standards, CI/CD expectations, and security guidance.
 
 ## 📚 Module Structure
 
