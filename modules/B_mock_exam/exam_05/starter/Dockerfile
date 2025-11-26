@@ -1,17 +1,24 @@
-FROM python:3.11-slim
+FROM python:3.11-slim AS builder
+WORKDIR /build
+COPY app/requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM python:3.11-slim
+RUN groupadd -r app && useradd -r -g app -u 1000 app && \
+    apt-get update && apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY app/requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+COPY --from=builder /root/.local /home/app/.local
+COPY --chown=app:app app/ .
 
-COPY app/ /app/
-
-# Create non-root user
-RUN useradd -m appuser
-USER appuser
+USER app
+ENV PATH=/home/app/.local/bin:$PATH \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
 EXPOSE 8000
-CMD ["python", "app.py"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["python", "-u", "app.py"]
