@@ -79,6 +79,13 @@ cd modules/A_zero_to_hero
 ./run_tests.sh
 ```
 
+## ✅ Quality Gates
+- **Pre-commit**: run `pre-commit install` to enforce formatting (black/ruff), YAML lint, shell/Docker lint, and Terraform fmt/validate/tflint/tfsec.
+- **CI workflows**: 
+  - `.github/workflows/full-project-ci.yaml` – lint/test/build/scan for Module C.
+  - `.github/workflows/terraform-checks.yaml` – fmt/validate/tflint/tfsec across Terraform stacks.
+  - `.github/workflows/security-scan.yaml` – Trivy, gitleaks, Semgrep.
+
 ## 📚 Module Structure
 
 ### Module A – Zero to Hero

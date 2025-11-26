@@ -26,7 +26,8 @@ Enterprise-ready end-to-end DevOps project demonstrating best practices for cont
 ├── tests/                 # Application tests
 │   └── test_app.py       # Integration tests
 ├── .github/workflows/     # CI/CD pipelines
-│   └── ci-cd.yaml        # Automated build, test, deploy
+│   ├── full-project-ci.yaml   # Lint, test, build, scan
+│   └── terraform-checks.yaml  # Terraform fmt/validate/tflint/tfsec
 └── Makefile              # Common operations
 
 ## Features
@@ -144,20 +145,18 @@ terraform output -json
 
 ## CI/CD Pipeline
 
-The GitHub Actions workflow (`.github/workflows/ci-cd.yaml`) includes:
+The GitHub Actions workflows include:
 
-1. **Security Scanning**
-   - Trivy vulnerability scanning
-   - SARIF upload to GitHub Security
+1. **Full Project CI (`full-project-ci.yaml`)**
+   - Ruff/black linting
+   - Pytest (with app running)
+   - Docker build + Trivy image scan
+   - Kustomize + kubeconform validation
 
-2. **Build & Push**
-   - Multi-platform builds (amd64, arm64)
-   - Image caching for faster builds
-   - Automatic tagging (branch, SHA, semver)
-
-3. **Deploy**
-   - Environment-based deployment
-   - Rollout status verification
+2. **Terraform Checks (`terraform-checks.yaml`)**
+   - Fmt/validate
+   - TFLint
+   - tfsec
 
 ## Security Best Practices
 
