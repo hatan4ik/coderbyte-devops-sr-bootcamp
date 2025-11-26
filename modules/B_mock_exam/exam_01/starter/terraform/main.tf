@@ -82,15 +82,18 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "app" {
   }
 }
 
-# SRE: Enable access logging for security audits and operational troubleshooting.
-resource "aws_s3_bucket_logging" "app" {
+resource "aws_s3_bucket_lifecycle_configuration" "app" {
   bucket = aws_s3_bucket.app.id
-
-  # In a real project, this would be a separate, dedicated logging bucket.
-  # For this exam, we log to the bucket itself under a 'logs/' prefix.
-  target_bucket = aws_s3_bucket.app.id
-  target_prefix = "logs/"
+  rule {
+    id     = "expire-old-versions"
+    status = "Enabled"
+    noncurrent_version_expiration {
+      noncurrent_days = 90
+    }
+  }
 }
+
+data "aws_caller_identity" "current" {}
 
 output "bucket_id" {
   value       = aws_s3_bucket.app.id
@@ -100,4 +103,9 @@ output "bucket_id" {
 output "bucket_arn" {
   value       = aws_s3_bucket.app.arn
   description = "The ARN of the provisioned S3 bucket."
+}
+
+output "account_id" {
+  value       = data.aws_caller_identity.current.account_id
+  description = "AWS account ID"
 }

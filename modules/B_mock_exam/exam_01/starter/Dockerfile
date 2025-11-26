@@ -1,21 +1,25 @@
-FROM python:3.11-slim
+# Multi-stage build for production
+FROM python:3.11-slim AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM python:3.11-slim
+RUN groupadd -r appuser && useradd -r -g appuser -u 1000 appuser && \
+    apt-get update && apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+COPY --from=builder /root/.local /home/appuser/.local
+COPY --chown=appuser:appuser app.py .
 
-COPY requirements.txt .
-RUN python -m pip install --upgrade pip && \
-    python -m pip install --no-cache-dir -r requirements.txt
-
-COPY app.py .
-
-# Create non-root runtime user
-RUN useradd --create-home appuser
 USER appuser
+ENV PATH=/home/appuser/.local/bin:$PATH \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD python - <<'PY'\nimport http.client\nconn = http.client.HTTPConnection("127.0.0.1", 8000, timeout=2)\ntry:\n    conn.request("GET", "/health")\n    resp = conn.getresponse()\n    exit(0 if resp.status == 200 else 1)\nexcept Exception:\n    exit(1)\nfinally:\n    conn.close()\nPY
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["python", "app.py"]
+CMD ["python", "-u", "app.py"]

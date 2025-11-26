@@ -1,31 +1,76 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-health
+  name: exam01-http
+  labels:
+    app: exam01-http
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
-      app: web-health
+      app: exam01-http
   template:
     metadata:
       labels:
-        app: web-health
+        app: exam01-http
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-      - name: web-health
-        image: your-registry/health-app:latest
+      - name: app
+        image: exam01-http:latest
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8000
+        - name: http
+          containerPort: 8000
+        env:
+        - name: SERVICE_NAME
+          value: "exam01-http"
+        - name: LOG_LEVEL
+          value: "INFO"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop: [ALL]
         livenessProbe:
           httpGet:
             path: /health
-            port: 8000
-          initialDelaySeconds: 5
+            port: http
+          initialDelaySeconds: 10
           periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /health
-            port: 8000
-          initialDelaySeconds: 2
+            port: http
+          initialDelaySeconds: 5
           periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      terminationGracePeriodSeconds: 30

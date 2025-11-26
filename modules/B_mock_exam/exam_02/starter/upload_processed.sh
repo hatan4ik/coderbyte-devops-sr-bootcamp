@@ -1,15 +1,20 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
-: "${BUCKET:?BUCKET environment variable is required}"
-INPUT_JSON="${1:-processed.json}"
-KEY="${KEY:-processed/$(date +%Y%m%d-%H%M%S).json}"
+BUCKET_NAME="${BUCKET_NAME:-log-pipeline-processed-dev}"
+INPUT_FILE="${1:-processed_logs.json}"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+S3_KEY="processed/${TIMESTAMP}_$(basename "$INPUT_FILE")"
 
-if [[ ! -f "${INPUT_JSON}" ]]; then
-  echo "Input file not found: ${INPUT_JSON}" >&2
-  exit 1
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "Error: Input file '$INPUT_FILE' not found"
+    exit 1
 fi
 
-echo "Uploading ${INPUT_JSON} to s3://${BUCKET}/${KEY}"
-aws s3 cp "${INPUT_JSON}" "s3://${BUCKET}/${KEY}"
-echo "Done."
+echo "Uploading $INPUT_FILE to s3://${BUCKET_NAME}/${S3_KEY}"
+
+aws s3 cp "$INPUT_FILE" "s3://${BUCKET_NAME}/${S3_KEY}" \
+    --server-side-encryption AES256 \
+    --metadata "uploaded=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+echo "Upload complete: s3://${BUCKET_NAME}/${S3_KEY}"

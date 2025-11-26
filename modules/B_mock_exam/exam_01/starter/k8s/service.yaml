@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: exam01-http
+  labels:
+    app: exam01-http
+spec:
+  type: ClusterIP
+  selector:
+    app: exam01-http
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
