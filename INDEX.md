@@ -12,6 +12,7 @@ coderbyte-devops-sr-bootcamp/
 │   └── E_custom_plan/           # Job-specific prep
 ├── .github/workflows/           # CI/CD pipelines
 ├── docs/                        # Documentation
+├── practice_examples/           # Hands-on labs (containers/K8s/Terraform/CI/Security/Obs)
 └── config/                      # Configuration files
 ```
 
@@ -127,6 +128,17 @@ coderbyte-devops-sr-bootcamp/
 - [skills_mapping.md](modules/E_custom_plan/skills_mapping.md)
 - [checklist.md](modules/E_custom_plan/checklist.md)
 
+### Practice Labs (Zero → Hero accelerators)
+**Location**: `practice_examples/`
+- Scripting: `bash-top-ips`, `python-concurrent-fetch`, `go-http-service`, `log-streamer`
+- Containers/Supply chain: `container-sbom`, `helm-policy`
+- Kubernetes: `k8s-hardening`, `k8s-canary`, `k8s-resource-quota`
+- Terraform/Cloud: `terraform-vpc`, `terraform-vpc-peering`, `aws-budget`
+- CI/CD: `ci-pipeline`
+- Security/Policy: `security-policy` (OPA/Gatekeeper/Kyverno), `container-sbom`
+- Observability/SRE: `observability-slo`, `observability-stack`
+- Networking/Resiliency: `networking-debug`, `chaos-drill`, `networking-debug/cni-misroute`
+
 ## 🔧 Configuration Files
 
 ### Root Level
@@ -176,19 +188,20 @@ make k8s-deploy
 ## 🎯 Learning Paths
 
 ### Beginner (Weeks 1-2)
-1. Module A - Bash basics
-2. Module A - Python basics
+1. Module A - Bash/Python basics (daily reps)
+2. Practice labs (scripting) - `practice_examples/bash-top-ips`, `python-concurrent-fetch`, `go-http-service`
 3. Module D - Practice challenges
 
 ### Intermediate (Weeks 3-4)
-1. Module C - Full project
-2. Module B - Exams 1-3
-3. Module A - Go basics
+1. Containers/K8s/Terraform labs - `container-sbom`, `k8s-hardening`, `terraform-vpc`
+2. Module C - Full project overview
+3. Module B - Exams 1-3; Module A - Go basics
 
 ### Advanced (Weeks 5-8)
-1. Module B - Exams 4-10
-2. Module E - Custom plan
-3. Advanced topics
+1. CI/CD + Security/Policy labs - `ci-pipeline`, `security-policy`, `helm-policy`
+2. Observability/SRE labs - `observability-slo`, `observability-stack`
+3. Module B - Exams 4-10; Resiliency/Networking labs (`chaos-drill`, `networking-debug`)
+4. Module E - Custom plan (job-aligned)
 
 ## 📊 Progress Tracking
 
