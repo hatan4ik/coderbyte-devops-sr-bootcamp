@@ -1,0 +1,27 @@
+{
+  "format_version": "1.0",
+  "resource_changes": [
+    {
+      "type": "aws_s3_bucket",
+      "name": "bucket",
+      "change": {
+        "after": {
+          "bucket": "my-bucket"
+        },
+        "after_server_side_encryption_configuration": {
+          "rule": {
+            "apply_server_side_encryption_by_default": {
+              "sse_algorithm": ""
+            }
+          }
+        },
+        "after_versioning_configuration": {
+          "status": "Suspended"
+        },
+        "after_public_access_block": {
+          "block_public_acls": false
+        }
+      }
+    }
+  ]
+}
