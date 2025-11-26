@@ -297,6 +297,9 @@ terraform state show <resource>
 - Kyverno/Gatekeeper supply-chain policies: `practice_examples/security-policy/` (Gatekeeper, Kyverno trusted/signed images).
 - Chaos drill: `practice_examples/chaos-drill/` (pod delete loop to test resiliency).
 - K8s cost controls: `practice_examples/k8s-resource-quota/` (ResourceQuota + LimitRange).
+- Helm + policy: `practice_examples/helm-policy/` (Helm chart lint + Conftest OPA checks).
+- AWS budget alert: `practice_examples/aws-budget/` (Terraform budget with email notification).
+- CNI/Iptables drill: `practice_examples/networking-debug/cni-misroute/` (simulate DNS DROP rule, detect/rollback).
 
 ### Week 5-6: Expert (Proficient → Hero)
 
