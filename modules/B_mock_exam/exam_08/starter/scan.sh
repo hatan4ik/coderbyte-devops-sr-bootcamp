@@ -1,22 +1,42 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
-IMAGE="${1:-local/container-security:dev}"
+IMAGE_NAME="${1:-secure-app:latest}"
 
-echo "[INFO] Building image ${IMAGE}"
-docker build -t "${IMAGE}" .
+echo "=== Container Security Scanning ==="
+echo "Image: $IMAGE_NAME"
+echo ""
 
-echo "[INFO] Running trivy (if installed)"
-if command -v trivy >/dev/null 2>&1; then
-  trivy image --severity CRITICAL,HIGH --exit-code 1 "${IMAGE}"
-else
-  echo "trivy not installed; skipping"
-fi
+# Trivy vulnerability scan
+echo "1. Running Trivy vulnerability scan..."
+trivy image --severity HIGH,CRITICAL --exit-code 1 "$IMAGE_NAME"
 
-echo "[INFO] Generating SBOM with syft (if installed)"
-if command -v syft >/dev/null 2>&1; then
-  syft "${IMAGE}" -o json > sbom.json
-  echo "SBOM written to sbom.json"
-else
-  echo "syft not installed; skipping"
-fi
+# Hadolint Dockerfile linting
+echo ""
+echo "2. Running Hadolint..."
+hadolint Dockerfile
+
+# Generate SBOM
+echo ""
+echo "3. Generating SBOM with Syft..."
+syft "$IMAGE_NAME" -o json > sbom.json
+syft "$IMAGE_NAME" -o spdx-json > sbom-spdx.json
+echo "SBOM saved to sbom.json and sbom-spdx.json"
+
+# Grype vulnerability scan from SBOM
+echo ""
+echo "4. Running Grype scan..."
+grype sbom:sbom.json --fail-on high
+
+# Image analysis
+echo ""
+echo "5. Image analysis..."
+docker inspect "$IMAGE_NAME" | jq '.[0] | {
+  User: .Config.User,
+  ExposedPorts: .Config.ExposedPorts,
+  Env: .Config.Env,
+  Size: .Size
+}'
+
+echo ""
+echo "=== Security scan complete ==="

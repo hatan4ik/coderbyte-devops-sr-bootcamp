@@ -1,45 +1,47 @@
-import time
-from flask import Flask, jsonify, request, Response
+#!/usr/bin/env python3
+"""SRE-instrumented web service with Prometheus metrics."""
+from flask import Flask, jsonify, request
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+import time
+import logging
+
+logging.basicConfig(level='INFO', format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-REQUEST_LATENCY = Histogram(
-    "http_request_duration_seconds",
-    "Request latency",
-    ['method', 'endpoint'],
-)
-REQUEST_COUNT = Counter(
-    "http_requests_total",
-    "Total HTTP requests",
-    ['method', 'endpoint', 'status']
-)
+# Prometheus metrics
+REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint', 'status'])
+REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP request latency', ['method', 'endpoint'])
+ERROR_COUNT = Counter('http_errors_total', 'Total HTTP errors', ['method', 'endpoint'])
 
 @app.before_request
-def start_timer():
-    request._start_time = time.time()
+def before_request():
+    request.start_time = time.time()
 
 @app.after_request
-def record_metrics(response):
-    elapsed = time.time() - getattr(request, "_start_time", time.time())
-    endpoint = request.endpoint or "unknown"
-    REQUEST_LATENCY.labels(request.method, endpoint).observe(elapsed)
-    REQUEST_COUNT.labels(request.method, endpoint, response.status_code).inc()
+def after_request(response):
+    latency = time.time() - request.start_time
+    REQUEST_LATENCY.labels(method=request.method, endpoint=request.path).observe(latency)
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.path, status=response.status_code).inc()
+    
+    if response.status_code >= 400:
+        ERROR_COUNT.labels(method=request.method, endpoint=request.path).inc()
+    
+    logger.info(f"{request.method} {request.path} {response.status_code} {latency:.3f}s")
     return response
 
-@app.route("/healthz", methods=["GET"])
-def healthz():
-    return jsonify({"status": "ok"}), 200
+@app.route('/healthz')
+def health():
+    return jsonify({"status": "healthy"}), 200
 
-@app.route("/hello", methods=["GET"])
-def hello():
-    name = request.args.get("name", "world")
-    return jsonify({"message": f"hello {name}"})
-
-@app.route("/metrics", methods=["GET"])
+@app.route('/metrics')
 def metrics():
-    data = generate_latest()
-    return Response(data, mimetype=CONTENT_TYPE_LATEST)
+    return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+@app.route('/')
+def index():
+    return jsonify({"service": "sre-demo", "endpoints": ["/healthz", "/metrics"]}), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)
