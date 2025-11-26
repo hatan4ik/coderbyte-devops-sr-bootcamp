@@ -30,6 +30,7 @@ Guiding conventions for this repository across code, infrastructure, CI/CD, and 
 - Build images with explicit tags (SHA or semver) and non-root users.
 - Scan images (Trivy) and lint Dockerfiles (hadolint) before push.
 - Validate manifests with kubeconform; prefer canary/rolling updates.
+- Templates: see `ci-templates/` for GitHub Actions, GitLab CI, and Azure Pipelines starter workflows.
 
 ## Security Practices
 - Secrets: never commit; use CI secrets/OIDC. Secret scanning via Gitleaks and Semgrep.

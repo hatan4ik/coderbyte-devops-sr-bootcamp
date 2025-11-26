@@ -1,0 +1,73 @@
+trigger:
+  - main
+
+pr:
+  - main
+
+variables:
+  imageName: 'example/app'
+  imageTag: '$(Build.SourceVersion)'
+
+stages:
+  - stage: LintTest
+    displayName: Lint and Test
+    jobs:
+      - job: LintTest
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.11'
+          - script: |
+              python -m pip install --upgrade pip
+              python -m pip install pre-commit pytest -r requirements.txt
+            displayName: 'Install dependencies'
+          - script: pre-commit run --all-files
+            displayName: 'Pre-commit'
+          - script: |
+              if [ -d tests ]; then pytest -q tests; else echo "No tests"; fi
+            displayName: 'Pytest'
+
+  - stage: BuildScan
+    displayName: Build and Scan
+    dependsOn: LintTest
+    jobs:
+      - job: BuildScan
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - task: DockerInstaller@0
+          - script: |
+              docker build -t $(imageName):$(imageTag) .
+            displayName: 'Docker build'
+          - script: |
+              if command -v trivy >/dev/null 2>&1; then
+                trivy image --severity CRITICAL,HIGH --exit-code 1 $(imageName):$(imageTag)
+              else
+                echo "Trivy not available in hosted agents; install via script if required"
+              fi
+            displayName: 'Trivy scan'
+
+  - stage: Terraform
+    displayName: Terraform Checks
+    dependsOn: BuildScan
+    jobs:
+      - job: Terraform
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - script: |
+              curl -LO https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip
+              unzip terraform_1.5.0_linux_amd64.zip
+              sudo mv terraform /usr/local/bin/
+            displayName: 'Install Terraform'
+          - script: |
+              cd infra/terraform
+              terraform fmt -check -recursive
+              terraform init -backend=false
+              terraform validate -no-color
+            displayName: 'Terraform fmt/validate'
