@@ -1,13 +1,14 @@
 # Quorum Board: Crushing Coderbyte DevOps (Sr. Level)
 
 ## Board Members & Roles
-- **Release Captain**: Owns delivery flow; enforces branching, tagging, changelogs.
-- **Reliability Lead (SRE)**: Uptime, SLIs/SLOs, incident playbooks, chaos drills.
-- **Security Champion**: Secrets, image/IaC scanning, SBOM/signing, threat modeling.
-- **Platform Architect**: K8s/IaC standards, golden paths, GitOps, cost/quotas.
-- **Pipeline Engineer**: CI/CD speed/quality gates, reusable templates, environments.
-- **Data & Observability Lead**: Logs/metrics/traces, dashboards, alert hygiene.
-- **QA Automation**: Contract tests, smoke/regression gates, shift-left testing.
+- **Principal DevOps Architect (Chair)**: Architecture, pipelines, IaC, cloud patterns, GitOps, best practices; curates and continuously grooms repo content for production-grade standards.
+- **Software Engineer (Backend + Scripting Expert)**: Python/Go/Bash algorithms, APIs, testability, fixtures, deterministic outputs.
+- **Systems Engineer / Linux SME**: Kernel, networking, processes, filesystems, perf/debug tooling (strace, lsof, tcpdump).
+- **SRE Specialist**: Reliability patterns, SLIs/SLOs, error budgets, alert hygiene, incident response/runbooks.
+- **Cloud Architect (AWS + Azure)**: IAM/WIF-OIDC, VPC/VNet, KMS/Key Vault, secrets, landing zones, service wiring.
+- **CI/CD & Automation Guru**: GitHub Actions, ADO, GitLab, Jenkins; reusable templates, gates, artifact signing, SBOM.
+- **Containers + K8s Engineer**: Dockerfile optimization, Helm/Kustomize, clusters (EKS/AKS/RKE2), probes/limits, NetPol/PDB/HPA.
+- **Security/DevSecOps Expert**: Scanning (SAST/SCA/Trivy/tfsec), OPA/Conftest, signing (cosign), policy enforcement, CVE triage.
 
 ## Assessment Types (What You Will Face)
 - **Short scripts**: Bash/Python/Go utilities (parsers, health checks, file ops).

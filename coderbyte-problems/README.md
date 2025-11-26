@@ -1,0 +1,36 @@
+# Coderbyte DevOps Problems & Solutions
+
+Real Coderbyte-style problems with production-grade solutions.
+
+## Problem Categories
+
+1. **[Container Tasks](container-tasks/)** - Docker optimization, security, debugging
+2. **[Kubernetes Tasks](kubernetes-tasks/)** - Deployments, debugging, GitOps
+3. **[Terraform Tasks](terraform-tasks/)** - IaC security, modules, state management
+4. **[CI/CD Tasks](cicd-tasks/)** - Pipeline building, security scanning
+5. **[Debugging Tasks](debugging-tasks/)** - System troubleshooting, root cause analysis
+6. **[Security Tasks](security-tasks/)** - Hardening, scanning, compliance
+7. **[Observability Tasks](observability-tasks/)** - Metrics, logging, alerting
+8. **[Scripting Tasks](scripting-tasks/)** - Bash/Python automation
+
+## Difficulty Levels
+
+- 🟢 **Easy** (15-20 min) - Foundation level
+- 🟡 **Medium** (30-45 min) - Production patterns
+- 🔴 **Hard** (60-90 min) - Complex scenarios
+
+## How to Use
+
+1. Read problem statement in `problem.md`
+2. Attempt solution (time yourself)
+3. Compare with `solution/` directory
+4. Review `explanation.md` for concepts
+5. Practice variations
+
+## Time Targets
+
+- Easy: Complete in 15 minutes
+- Medium: Complete in 30 minutes
+- Hard: Complete in 60 minutes
+
+**Goal**: Achieve 90%+ accuracy within time limits
