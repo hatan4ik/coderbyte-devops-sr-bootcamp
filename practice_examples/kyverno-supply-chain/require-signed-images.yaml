@@ -1,0 +1,32 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-signed-images
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: verify-images
+    match:
+      resources:
+        kinds:
+        - Pod
+    verifyImages:
+    - imageReferences:
+      - "ghcr.io/your-org/*"
+      attestors:
+      - entries:
+        - keys:
+            publicKeys: |
+              # replace with your cosign public key
+              -----BEGIN PUBLIC KEY-----
+              YOUR-KEY-HERE
+              -----END PUBLIC KEY-----
+      failureAction: Enforce
+    - imageReferences:
+      - "*"
+      verifyDigest: false
+      required: false
+      attestors: []
+      mutateDigest: false
+      verifySigstore: false

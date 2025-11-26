@@ -1,0 +1,30 @@
+{
+  "title": "Observability SLO Demo",
+  "schemaVersion": 36,
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Requests per second",
+      "targets": [
+        { "expr": "sum(rate(http_requests_total[5m]))" }
+      ],
+      "id": 1
+    },
+    {
+      "type": "graph",
+      "title": "Error rate",
+      "targets": [
+        { "expr": "sum(rate(http_request_errors_total[5m])) / sum(rate(http_requests_total[5m]))" }
+      ],
+      "id": 2
+    },
+    {
+      "type": "graph",
+      "title": "Latency p95",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))" }
+      ],
+      "id": 3
+    }
+  ]
+}
