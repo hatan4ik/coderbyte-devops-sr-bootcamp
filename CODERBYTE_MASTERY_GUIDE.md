@@ -293,6 +293,10 @@ terraform state show <resource>
 - Observability/SLO demo: `practice_examples/observability-slo/` (Flask app with metrics + alert rules).
 - Networking/Linux debug: `practice_examples/networking-debug/` (CPU hog drill, CoreDNS/DNS scenario with test pod).
 - Concurrent log streamer: `practice_examples/log-streamer/` (streaming multi-file error counts, concurrency, tests).
+- Observability stack wiring: `practice_examples/observability-stack/` (K8s deploy + alerts + Grafana dashboard).
+- Kyverno/Gatekeeper supply-chain policies: `practice_examples/security-policy/` (Gatekeeper, Kyverno trusted/signed images).
+- Chaos drill: `practice_examples/chaos-drill/` (pod delete loop to test resiliency).
+- K8s cost controls: `practice_examples/k8s-resource-quota/` (ResourceQuota + LimitRange).
 
 ### Week 5-6: Expert (Proficient → Hero)
 
