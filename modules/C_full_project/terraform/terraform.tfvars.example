@@ -1,0 +1,6 @@
+region              = "us-east-1"
+environment         = "dev"
+service_name        = "devops-demo"
+owner               = "devops-team"
+enable_versioning   = true
+enable_encryption   = true

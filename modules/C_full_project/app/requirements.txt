@@ -1,0 +1,2 @@
+# Production dependencies - pinned versions for security
+# No dependencies needed for basic HTTP server
