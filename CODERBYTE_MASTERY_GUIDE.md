@@ -289,6 +289,8 @@ terraform state show <resource>
 - Terraform VPC starter: `practice_examples/terraform-vpc/` (fmt/validate/plan).
 - CI pipeline demo (GitHub Actions): `practice_examples/ci-pipeline/` (ruff/black/pytest → docker build → trivy scan; template workflow in `github-actions.yaml`).
 - Security policy demo: `practice_examples/security-policy/` (Conftest/OPA policies for k8s+Terraform, cosign verification helper).
+- Observability/SLO demo: `practice_examples/observability-slo/` (Flask app with metrics + alert rules).
+- Networking/Linux debug: `practice_examples/networking-debug/` (CPU hog drill, CoreDNS/DNS scenario with test pod).
 
 ### Week 5-6: Expert (Proficient → Hero)
 
