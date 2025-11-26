@@ -1,6 +1,13 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 COPY log_processor.py .
 
-CMD ["python", "log_processor.py", "access.log"]
+RUN useradd --create-home appuser
+USER appuser
+
+ENTRYPOINT ["python", "log_processor.py"]
+CMD ["access.log"]

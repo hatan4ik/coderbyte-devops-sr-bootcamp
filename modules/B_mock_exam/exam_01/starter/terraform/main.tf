@@ -6,10 +6,6 @@ terraform {
       version = "~> 5.0"
     }
   }
-
-  backend "s3" {
-    # This would be configured for a real environment
-  }
 }
 
 provider "aws" {
@@ -37,18 +33,56 @@ variable "bucket_base_name" {
 variable "tags" {
   type        = map(string)
   description = "Tags to apply to resources"
-  default = {
-    ManagedBy   = "Terraform"
-    Project     = "CoderbyteExam01"
-    Environment = "dev" # This should match var.environment
+  default     = {}
+}
+
+locals {
+  env         = lower(var.environment)
+  bucket_name = "${var.bucket_base_name}-${local.env}"
+  tags = merge(
+    {
+      ManagedBy   = "Terraform"
+      Project     = "CoderbyteExam01"
+      Environment = local.env
+    },
+    var.tags
+  )
+}
+
+# S3 bucket with sane defaults
+resource "aws_s3_bucket" "app" {
+  bucket        = local.bucket_name
+  force_destroy = false
+
+  tags = local.tags
+}
+
+resource "aws_s3_bucket_public_access_block" "app" {
+  bucket = aws_s3_bucket.app.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_versioning" "app" {
+  bucket = aws_s3_bucket.app.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
-# Call the reusable S3 bucket module
-module "app_bucket" {
-  source = "../../../../../modules/aws-s3-bucket" # Adjust path as needed
+resource "aws_s3_bucket_server_side_encryption_configuration" "app" {
+  bucket = aws_s3_bucket.app.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
 
-  bucket_base_name = var.bucket_base_name
-  environment      = var.environment
-  tags             = var.tags
+output "bucket_name" {
+  value       = aws_s3_bucket.app.bucket
+  description = "Name of the provisioned bucket."
 }

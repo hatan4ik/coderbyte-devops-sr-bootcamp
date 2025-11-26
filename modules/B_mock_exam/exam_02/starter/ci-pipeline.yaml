@@ -8,6 +8,12 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: log-processor
+      IMAGE_TAG: ${{ github.sha }}
+      REGISTRY: ghcr.io/your-org
+      DOCKERFILE: modules/B_mock_exam/exam_02/starter/Dockerfile
+      CONTEXT: modules/B_mock_exam/exam_02/starter
     steps:
     - uses: actions/checkout@v4
 
@@ -18,8 +24,11 @@ jobs:
 
     - name: Run tests (if present)
       run: |
-        if ls **/tests.py 1> /dev/null 2>&1; then
-          for t in $(find . -name 'tests.py'); do
+        set -euo pipefail
+        shopt -s nullglob
+        tests=(modules/B_mock_exam/exam_02/starter/*tests.py)
+        if [ ${#tests[@]} -gt 0 ]; then
+          for t in "${tests[@]}"; do
             echo "Running $t"
             python "$t"
           done
@@ -29,8 +38,20 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t registry.example.com/log-processor:latest .
+        set -euo pipefail
+        IMAGE="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+        docker build -f "${DOCKERFILE}" -t "${IMAGE}" "${CONTEXT}"
+        echo "Built ${IMAGE}"
 
     - name: Push Docker image (placeholder)
+      env:
+        REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
       run: |
-        echo "Here you would 'docker login' and 'docker push'."
+        set -euo pipefail
+        if [ -z "${REGISTRY_TOKEN:-}" ]; then
+          echo "No registry token configured; skipping push."
+          exit 0
+        fi
+        echo "${REGISTRY_TOKEN}" | docker login "${REGISTRY}" -u "${{ github.actor }}" --password-stdin
+        IMAGE="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+        docker push "${IMAGE}"

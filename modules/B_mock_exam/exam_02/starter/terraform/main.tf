@@ -30,8 +30,39 @@ variable "bucket_name" {
   default     = "coderbyte-log-pipeline"
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "Additional tags"
+  default     = {}
+}
+
+locals {
+  env         = lower(var.environment)
+  bucket_name = "${var.bucket_name}-${local.env}"
+  tags = merge(
+    {
+      ManagedBy   = "Terraform"
+      Environment = local.env
+      Project     = "log-pipeline"
+    },
+    var.tags
+  )
+}
+
 resource "aws_s3_bucket" "logs" {
-  bucket = "${var.bucket_name}-${var.environment}"
+  bucket        = local.bucket_name
+  force_destroy = false
+
+  tags = local.tags
+}
+
+resource "aws_s3_bucket_public_access_block" "logs" {
+  bucket = aws_s3_bucket.logs.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_versioning" "logs" {
@@ -48,4 +79,9 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
       sse_algorithm = "AES256"
     }
   }
+}
+
+output "bucket_name" {
+  value       = aws_s3_bucket.logs.bucket
+  description = "Provisioned bucket name."
 }
