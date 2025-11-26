@@ -85,6 +85,23 @@
 ✅ Artifact reuse
 ✅ Matrix builds
 
+### Platform Checklists
+**GitHub Actions**
+- Require status checks + signed commits; use CODEOWNERS for critical paths
+- Reusable workflows: lint/test, terraform checks (fmt/validate/tflint/tfsec), image scan with Trivy
+- OIDC for cloud auth; avoid long-lived keys; upload SARIF for security scans
+- Matrix builds (amd64/arm64) with SBOM (syft) + provenance (cosign); protected environments for promotions
+
+**GitLab CI**
+- Stages: lint → test → build → scan → deploy; protect variables and runners
+- Terraform plan/apply with manual gates; container/SAST/secret scans enabled
+- Dynamic review apps with auto teardown; Helm deploys with rollback; compliance pipelines for licenses/security
+
+**Azure DevOps**
+- Multi-stage YAML (CI → QA → Prod) with approvals/gates; variable groups + Key Vault for secrets
+- ACR push via managed identity; AKS blue/green or canary with health gates
+- Policy gates (tfsec/Checkov), signed images (cosign), SBOM publish; Defender for Cloud integration
+
 ## Observability
 
 ### Logging
