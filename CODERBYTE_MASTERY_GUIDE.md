@@ -233,6 +233,52 @@ terraform state show <resource>
 - RBAC implementation
 - Compliance scanning
 
+---
+
+## 🛠 Real-World Projects (Zero → Hero with Problem → Solution)
+
+### 1) Containers & Supply Chain
+- **Zero (Problem):** Legacy Dockerfile runs as root, huge image, no healthcheck.  
+  **Solution:** Multi-stage `python:3.11-slim`, non-root user, `.dockerignore`, `HEALTHCHECK`, pinned deps, `hadolint` + `trivy` pass.
+- **Hero (Problem):** Need signed artifacts and SBOM for prod image.  
+  **Solution:** Build with cache, generate SBOM via `syft`, sign with `cosign`, enforce policy (Gatekeeper/Conftest), publish provenance attestation.
+
+### 2) Kubernetes Deployment Hardening
+- **Zero:** Deployment missing probes/limits; pods restart randomly.  
+  **Solution:** Add liveness/readiness/startup probes, requests/limits, PDB=1, HPA min=2, anti-affinity, seccomp `RuntimeDefault`, `runAsNonRoot`, `readOnlyRootFilesystem`.
+- **Hero:** Lock down traffic and releases.  
+  **Solution:** NetworkPolicy default deny + ingress from ingress-controller/monitoring; Kustomize overlays per env; canary/blue-green rollout; kubeconform validation; ArgoCD sync with auto-heal/prune.
+
+### 3) Terraform & Cloud Foundation
+- **Zero:** Create S3 bucket with encryption/versioning and block public access.  
+  **Solution:** Bucket + SSE + versioning + public access block + tags; fmt/validate/tflint/tfsec clean.
+- **Hero:** Minimal landing zone.  
+  **Solution:** VPC (public/private), IGW/NAT, SG least privilege, IAM roles with OIDC, DynamoDB/S3 remote state with locking, tfsec/Checkov clean, module + tfvars per env.
+
+### 4) CI/CD Pipelines
+- **Zero:** Build-and-test GitHub Action.  
+  **Solution:** Lint (ruff/black/yamllint/shellcheck/hadolint) → pytest → docker build → trivy image scan → terraform fmt/validate/tflint/tfsec; push only if creds set.
+- **Hero:** Multi-platform, gated delivery.  
+  **Solution:** Matrix (amd64/arm64) with cache, SBOM + cosign signing, SARIF upload, environments with approvals, deploy step triggering ArgoCD/Helm, reusable workflows/templates.
+
+### 5) Observability & SRE
+- **Zero:** Add `/metrics` and structured logs to a Flask/Go service.  
+  **Solution:** Prometheus client with request count/latency/error metrics, JSON logs with request IDs, `/health` and `/ready`, basic dashboards/alerts (error rate >5%, p95>500ms).
+- **Hero:** SLOs + alert hygiene.  
+  **Solution:** Define SLIs/SLOs, burn-rate alerts, exemplars/tracing headers, runbook linking, synthetic checks, P99/p50 dashboards, log sampling for noise reduction.
+
+### 6) Security/DevSecOps
+- **Zero:** Remove secrets from code; add scanning.  
+  **Solution:** Env/secret manager, gitleaks, semgrep ruleset, dependency check, enforce TLS endpoints, least privilege IAM.
+- **Hero:** Policy as code + supply-chain.  
+  **Solution:** OPA/Conftest on K8s/Terraform, signed images + attestations, periodic CVE triage workflow, renovate/dependabot for updates, MDR for alerts.
+
+### 7) Scripting & Data Plumbing (Bash/Python/Go)
+- **Zero:** Log parser counts ERRORs.  
+  **Solution:** Regex extract, JSON output, CLI args/usage, tests/fixtures, handles missing files, stable ordering.
+- **Hero:** Streaming/large-file safe.  
+  **Solution:** Generator/iterators, concurrency for multiple files, metrics on throughput/errors, output to S3 with retries/backoff, structured logging, unit/integration tests.
+
 ### Week 5-6: Expert (Proficient → Hero)
 
 #### Production Patterns
