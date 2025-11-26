@@ -286,6 +286,7 @@ terraform state show <resource>
 - Container SBOM/signing demo: `practice_examples/container-sbom/` (`./build_and_sign.sh <image>`).
 - K8s hardening bundle: `practice_examples/k8s-hardening/` (kustomize apply/validate).
 - Terraform VPC starter: `practice_examples/terraform-vpc/` (fmt/validate/plan).
+- CI pipeline demo (GitHub Actions): `practice_examples/ci-pipeline/` (ruff/black/pytest → docker build → trivy scan; template workflow in `github-actions.yaml`).
 
 ### Week 5-6: Expert (Proficient → Hero)
 
