@@ -141,7 +141,7 @@ coderbyte-devops-sr-bootcamp/
 - Security/Policy: `security-policy` (OPA/Gatekeeper/Kyverno), `container-sbom`
 - Observability/SRE: `observability-slo`, `observability-stack`
 - Networking/Resiliency: `networking-debug`, `chaos-drill`, `networking-debug/cni-misroute`
-- AWS Security: `aws-security/01-iam-basics`, `02-iam-oidc-role`, `03-vpc-network-security`, `04-cloudtrail-guardduty`, `05-ec2-ssm-imdsv2`, `06-ecr-lambda-hardening`, `07-cicd-supply-chain`, `08-incident-response`, `09-cross-account-iam`, `10-abac-sso`
+- AWS Security: `aws-security/01-iam-basics`, `02-iam-oidc-role`, `03-vpc-network-security`, `04-cloudtrail-guardduty`, `05-ec2-ssm-imdsv2`, `06-ecr-lambda-hardening`, `07-cicd-supply-chain`, `08-incident-response`, `09-cross-account-iam`, `10-abac-sso`, `11-codepipeline-supply-chain`
 
 ## 🔧 Configuration Files
 
