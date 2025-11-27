@@ -1,22 +1,29 @@
-# Module 9: GCP Big Data & ML
+# Module 9: Big Data and Machine Learning
 
-This module provides a high-level introduction to GCP's powerful data analytics and machine learning services. We will give a brief overview of **BigQuery**, Google's serverless data warehouse, and **Vertex AI**, the unified platform for machine learning.
+Welcome to the final module of the GCP Zero to Hero series. This section provides a high-level introduction to Google Cloud's powerful Big Data and Machine Learning (ML) platforms.
 
-## Key Topics
+## Learning Objectives
 
-### BigQuery
-1.  **Serverless Data Warehousing**: Understanding how BigQuery allows you to analyze terabytes of data in seconds without managing any infrastructure.
-2.  **Public Datasets**: Exploring the vast collection of public datasets available for analysis.
-3.  **Querying Data**: Running SQL queries using the BigQuery UI or the `bq` command-line tool.
-4.  **Loading Data**: An overview of how to load your own data into BigQuery from services like Cloud Storage.
+- Understand the purpose of BigQuery, Dataproc, and Vertex AI.
+- Run interactive queries on large datasets using BigQuery.
+- Understand how to run Spark and Hadoop jobs with Dataproc.
+- Get an introduction to training no-code ML models with Vertex AI's AutoML.
+- Differentiate between GCP's various data and ML services.
 
-### Vertex AI
-1.  **Unified ML Platform**: Understanding how Vertex AI brings together all of Google's ML tools under one roof.
-2.  **AutoML**: How to train high-quality custom machine learning models with minimal effort and ML expertise.
-3.  **Custom Training**: An overview of how to run custom training code on Vertex AI's managed infrastructure.
-4.  **Model Serving**: Deploying trained models to get predictions.
+## BigQuery
 
-## Labs
+**BigQuery** is a fully managed, serverless data warehouse that enables super-fast SQL queries using the processing power of Google's infrastructure. You can use it to analyze petabytes of data in seconds.
 
-- **Problem 1**: Use the `bq` command-line tool to query a public dataset and answer a specific question.
-- **Problem 2**: A conceptual lab outlining the steps to create a dataset in Vertex AI and start an AutoML image classification training job.
+## Dataproc
+
+**Dataproc** is a fully managed and highly scalable service for running Apache Spark, Apache Flink, Presto, and other open source tools and frameworks. Use Dataproc for data lake modernization, ETL, and secure data science, at scale.
+
+## Vertex AI and AutoML
+
+**Vertex AI** is Google Cloud's unified ML platform for building, deploying, and scaling ML models. A key feature of Vertex AI is **AutoML**, which enables developers with limited machine learning expertise to train high-quality models specific to their business needs.
+
+## Module Structure
+
+- **Code Examples**: Scripts for querying BigQuery, running a Dataproc job, and interacting with AutoML.
+- **Problem 1: Run a BigQuery Query**: A lab to query a public dataset using SQL in BigQuery.
+- **Problem 2: Train an AutoML Model**: A practical exercise to train an image classification model without writing any code.
