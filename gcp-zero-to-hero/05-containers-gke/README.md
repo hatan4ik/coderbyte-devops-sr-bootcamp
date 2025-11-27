@@ -1,18 +1,32 @@
-# Module 5: Containers & GKE
+# Module 5: Containers and Google Kubernetes Engine (GKE)
 
-This module dives into containerization with Docker and orchestration with **Google Kubernetes Engine (GKE)**. GKE is a managed Kubernetes service that simplifies deploying, managing, and scaling containerized applications.
+Welcome to Module 5 of the GCP Zero to Hero series. In this module, we'll dive into the world of containers and orchestration with a focus on Google Kubernetes Engine (GKE), Google's managed Kubernetes service.
 
-## Key Topics
+## Learning Objectives
 
-1.  **GKE Clusters**: Understanding the architecture of a GKE cluster, including the control plane and worker nodes.
-2.  **Node Pools**: Creating and managing groups of worker nodes with different machine types.
-3.  **Workloads (Deployments & Pods)**: Defining and managing stateless applications using Kubernetes Deployments and Pods.
-4.  **Services & Ingress**: Exposing applications to internal or external traffic using Kubernetes Services and Ingress objects.
-5.  **Autoscaling**: Configuring horizontal (Pod) and vertical (node) autoscaling.
-6.  **`kubectl` CLI**: Using the command-line tool to interact with and manage your GKE cluster and applications.
-7.  **GKE Autopilot vs. Standard**: Understanding the differences between the two modes of operation.
+By the end of this module, you will be able to:
 
-## Labs
+- Understand the fundamentals of containers and Docker.
+- Differentiate between Docker, Kubernetes, and GKE.
+- Provision a GKE cluster using the `gcloud` CLI and Terraform.
+- Deploy a containerized application to a GKE cluster.
+- Understand GKE networking and scaling concepts.
+- Monitor and manage GKE clusters.
 
-- **Problem 1**: Provision a standard GKE cluster with a custom node pool using Terraform.
-- **Problem 2**: Deploy a pre-built containerized web application to your GKE cluster and expose it to the internet.
+## Containers Fundamentals
+
+A container is a lightweight, standalone, executable package of software that includes everything needed to run it: code, runtime, system tools, system libraries and settings.
+
+**Docker** is the most popular containerization platform. It allows you to build, ship, and run applications in containers.
+
+## Kubernetes and GKE
+
+**Kubernetes** (also known as K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.
+
+**Google Kubernetes Engine (GKE)** is a managed, production-ready environment for deploying containerized applications. It brings our latest innovations in developer productivity, enterprise-readiness, and cost-optimization to your container-based workloads.
+
+## Module Structure
+
+- **Code Examples**: Practical examples of how to create GKE clusters and deploy applications using different tools.
+- **Problem 1: Create a GKE Cluster**: A hands-on lab to create your first GKE cluster.
+- **Problem 2: Deploy an Application**: A practical exercise to deploy a sample application to your GKE cluster.
