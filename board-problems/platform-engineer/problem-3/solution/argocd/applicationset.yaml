@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-apps
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - env: dev
+        replicas: "1"
+      - env: staging
+        replicas: "2"
+      - env: prod
+        replicas: "3"
+  template:
+    metadata:
+      name: 'app-{{env}}'
+    spec:
+      project: platform
+      source:
+        repoURL: https://github.com/org/apps
+        targetRevision: main
+        path: 'overlays/{{env}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'apps-{{env}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
