@@ -31,3 +31,9 @@ terraform plan -var 'resource_arn=arn:aws:elasticloadbalancing:...'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  WAF[WebACL with managed rules] -->|associate| Resource[ALB/CloudFront ARN]
+```
