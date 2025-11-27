@@ -1,0 +1,149 @@
+{
+  "Comment": "Travel Booking Saga with Compensation",
+  "StartAt": "ReserveFlight",
+  "States": {
+    "ReserveFlight": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ReserveFlightFunction}",
+        "Payload": {
+          "booking.$": "$.booking",
+          "idempotencyKey.$": "$.idempotencyKey"
+        }
+      },
+      "ResultPath": "$.flight",
+      "Catch": [{
+        "ErrorEquals": ["States.ALL"],
+        "ResultPath": "$.error",
+        "Next": "BookingFailed"
+      }],
+      "Next": "ReserveHotel"
+    },
+    "ReserveHotel": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ReserveHotelFunction}",
+        "Payload": {
+          "booking.$": "$.booking",
+          "idempotencyKey.$": "$.idempotencyKey"
+        }
+      },
+      "ResultPath": "$.hotel",
+      "Catch": [{
+        "ErrorEquals": ["States.ALL"],
+        "ResultPath": "$.error",
+        "Next": "CancelFlight"
+      }],
+      "Next": "ReserveCar"
+    },
+    "ReserveCar": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ReserveCarFunction}",
+        "Payload": {
+          "booking.$": "$.booking",
+          "idempotencyKey.$": "$.idempotencyKey"
+        }
+      },
+      "ResultPath": "$.car",
+      "Catch": [{
+        "ErrorEquals": ["States.ALL"],
+        "ResultPath": "$.error",
+        "Next": "CancelHotel"
+      }],
+      "Next": "ProcessPayment"
+    },
+    "ProcessPayment": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ProcessPaymentFunction}",
+        "Payload": {
+          "booking.$": "$.booking",
+          "flight.$": "$.flight.Payload",
+          "hotel.$": "$.hotel.Payload",
+          "car.$": "$.car.Payload"
+        }
+      },
+      "ResultPath": "$.payment",
+      "Catch": [{
+        "ErrorEquals": ["States.ALL"],
+        "ResultPath": "$.error",
+        "Next": "CancelCar"
+      }],
+      "Next": "SendConfirmation"
+    },
+    "SendConfirmation": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${ConfirmationTopic}",
+        "Message": {
+          "booking.$": "$.booking",
+          "status": "confirmed"
+        }
+      },
+      "Next": "BookingSuccess"
+    },
+    "CancelCar": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${CancelCarFunction}",
+        "Payload": {
+          "reservationId.$": "$.car.Payload.reservationId"
+        }
+      },
+      "ResultPath": "$.cancelCar",
+      "Next": "CancelHotel"
+    },
+    "CancelHotel": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${CancelHotelFunction}",
+        "Payload": {
+          "reservationId.$": "$.hotel.Payload.reservationId"
+        }
+      },
+      "ResultPath": "$.cancelHotel",
+      "Next": "CancelFlight"
+    },
+    "CancelFlight": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${CancelFlightFunction}",
+        "Payload": {
+          "reservationId.$": "$.flight.Payload.reservationId"
+        }
+      },
+      "ResultPath": "$.cancelFlight",
+      "Next": "NotifyFailure"
+    },
+    "NotifyFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${ConfirmationTopic}",
+        "Message": {
+          "booking.$": "$.booking",
+          "status": "failed",
+          "error.$": "$.error"
+        }
+      },
+      "Next": "BookingFailed"
+    },
+    "BookingSuccess": {
+      "Type": "Succeed"
+    },
+    "BookingFailed": {
+      "Type": "Fail",
+      "Error": "BookingFailed",
+      "Cause": "Travel booking failed with compensation"
+    }
+  }
+}
