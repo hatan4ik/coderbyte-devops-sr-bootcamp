@@ -316,6 +316,7 @@ terraform state show <resource>
 - Helm + policy: `practice_examples/helm-policy/` (Helm chart lint + Conftest OPA checks).
 - AWS budget alert: `practice_examples/aws-budget/` (Terraform budget with email notification).
 - CNI/Iptables drill: `practice_examples/networking-debug/cni-misroute/` (simulate DNS DROP rule, detect/rollback).
+- AWS security labs (IAM/OIDC/VPC): `practice_examples/aws-security/01-iam-basics`, `02-iam-oidc-role`, `03-vpc-network-security`.
 
 ### Week 5-6: Expert (Proficient → Hero)
 
