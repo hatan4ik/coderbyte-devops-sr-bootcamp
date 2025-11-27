@@ -1,42 +1,29 @@
-# Lab Task: Create a Monitoring Alerting Policy
+# Problem 2: Create a Monitoring Alerting Policy
 
 ## Objective
 
-Your task is to create an alerting policy in Google Cloud Monitoring that will notify a user if the CPU utilization of a Compute Engine VM exceeds a specified threshold for a sustained period.
+Your goal is to create an alerting policy in Cloud Monitoring that notifies you if a Cloud Run service has a high rate of server errors (5xx responses).
 
 ## Prerequisites
 
--   A running GCE virtual machine. You can use one from a previous lab or create a new one.
+- You should have a Cloud Run service deployed (you can use one from a previous module).
+- You should generate some traffic to the service, including some errors if possible, so that the metric data is available in Cloud Monitoring. A simple way to generate 5xx errors is to deploy a faulty application.
 
 ## Requirements
 
-1.  **Alerting Policy Configuration**:
-    -   Create a new alerting policy using the GCP Console or the `gcloud` CLI.
-    -   **Condition**: The policy should trigger based on a metric.
-        -   **Metric**: `CPU utilization` (`compute.googleapis.com/instance/cpu/utilization`).
-        -   **Target**: The policy should apply to a specific GCE VM instance.
-        -   **Configuration**:
-            -   The condition should trigger if `any time series violates` the threshold.
-            -   **Threshold**: `80%` (or `0.8` as a decimal).
-            -   **Duration**: `5 minutes`. The CPU utilization must be above the threshold for 5 minutes before the alert fires.
+1.  **Metric**: The alerting policy should monitor the `request_count` metric for Cloud Run revisions (`run.googleapis.com/request_count`).
+2.  **Filter**: The filter should specifically look for responses where the `response_code_class` is `5xx` (server errors).
+3.  **Condition**: The condition should trigger if the sum of 5xx errors is **above 5** for any 5-minute alignment period. The condition should be named something descriptive like "Too many server errors".
+4.  **Notification Channel**: Create a new email notification channel with your own email address.
+5.  **Alerting Policy**: Create a new alerting policy that uses the condition and notification channel you just created. Name the policy "Cloud Run Server Error Rate".
 
-2.  **Notification Channel**:
-    -   Create a notification channel to receive the alert.
-    -   For this lab, an `Email` channel is sufficient. Add your own email address as a recipient.
+## Verification
 
-3.  **Documentation**:
-    -   Add a documentation message to the alert.
-    -   The message should provide clear instructions for a first responder, for example:
-        ```
-        CPU utilization on instance ${metric.label.instance_name} has exceeded 80% for 5 minutes.
+1.  To test the alert, you need to generate 5xx errors from your service. You could, for example, deploy a broken version of an application to Cloud Run that always crashes.
+2.  After generating errors for a few minutes, you should receive an email notification from Google Cloud that your alert has been triggered.
+3.  You can also see the "incident" in the Cloud Monitoring "Alerting" section of the GCP Console.
+4.  Once you stop the error generation (e.g., by deploying a working version of the app), the incident should automatically resolve after a few minutes, and you should receive a follow-up email.
 
-        **Next Steps:**
-        1. SSH into the instance to investigate the running processes.
-        2. Check the application logs for errors.
-        3. Consider restarting the application process if it is unresponsive.
-        ```
+## Challenge
 
-4.  **Verification**:
-    -   (Optional but Recommended) To test the alert, you can install a stress testing tool on your VM (like `stress-ng`) and run a command to intentionally spike the CPU (e.g., `stress-ng --cpu 1 --timeout 10m`).
-    -   Wait for the alert to fire and verify that you receive an email notification.
-    -   Provide the `gcloud` command to list your alerting policies to verify its creation.
+Create a more advanced alert that triggers based on the *ratio* of 5xx errors to total requests, rather than an absolute number. For example, "trigger if more than 10% of requests in the last 10 minutes are 5xx errors". This requires using the Monitoring Query Language (MQL).

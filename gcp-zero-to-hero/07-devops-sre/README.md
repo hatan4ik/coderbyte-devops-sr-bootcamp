@@ -1,20 +1,31 @@
-# Module 7: GCP DevOps & SRE
+# Module 7: DevOps and Site Reliability Engineering (SRE)
 
-This module covers tools and practices for implementing DevOps and Site Reliability Engineering (SRE) on GCP. We will focus on **Cloud Build** for CI/CD, **Artifact Registry** for storing artifacts, and the **Cloud Operations** suite (formerly Stackdriver) for monitoring and logging.
+Welcome to Module 7. In this section, we'll explore GCP tools and practices related to DevOps and SRE. This includes Continuous Integration/Continuous Deployment (CI/CD), monitoring, logging, and tracing.
 
-## Key Topics
+## Learning Objectives
 
-### CI/CD
-1.  **Cloud Build**: A fully-managed CI/CD platform that lets you build, test, and deploy from source code. We will cover `cloudbuild.yaml` configuration and triggers.
-2.  **Artifact Registry**: A single place to manage container images and language packages (like Maven and npm). It is the recommended successor to Container Registry.
-3.  **Deployment Strategies**: An overview of blue/green, canary, and rolling deployments in the context of GCP services.
+- Understand key DevOps and SRE principles.
+- Create a CI/CD pipeline using Google Cloud Build.
+- Understand and use Google Cloud's operations suite (formerly Stackdriver):
+  - **Cloud Monitoring**: for metrics and dashboards.
+  - **Cloud Logging**: for centralized log management.
+  - **Cloud Trace**: for distributed tracing.
+- Create alerting policies based on application metrics.
 
-### SRE & Operations
-1.  **Cloud Monitoring**: Collecting metrics, creating dashboards, and setting up alerting policies for your GCP resources and applications.
-2.  **Cloud Logging**: Centralized log management, searching, and analysis. We will cover log-based metrics.
-3.  **Application Performance Management (APM)**: An overview of Cloud Trace and Cloud Profiler for debugging and performance analysis.
+## CI/CD with Cloud Build
 
-## Labs
+**Cloud Build** is a fully-managed CI/CD platform that lets you build, test, and deploy software quickly, at scale. You can write a build configuration file to define your pipeline steps.
 
-- **Problem 1**: Create a CI pipeline using Cloud Build that automatically builds a container image from a source repository and pushes it to Artifact Registry.
-- **Problem 2**: Create an alerting policy in Cloud Monitoring that notifies you if a GCE instance's CPU utilization exceeds a certain threshold.
+## Cloud's Operations Suite
+
+Google Cloud's operations suite provides integrated monitoring, logging, and trace managed services for applications and systems running on Google Cloud and beyond.
+
+- **Cloud Monitoring** collects metrics, events, and metadata from Google Cloud services, hosted uptime probes, application instrumentation, and a variety of common application components.
+- **Cloud Logging** allows you to store, search, analyze, monitor, and alert on log data and events from Google Cloud and Amazon Web Services.
+- **Cloud Trace** is a distributed tracing system that collects latency data from your applications and displays it in the Google Cloud Console.
+
+## Module Structure
+
+- **Code Examples**: A sample `cloudbuild.yaml` for a CI pipeline and a JSON definition for a Cloud Monitoring dashboard.
+- **Problem 1: Setup a CI/CD Pipeline**: A lab to build a simple CI/CD pipeline for a web application using Cloud Build.
+- **Problem 2: Create an Alerting Policy**: A practical exercise to set up a monitoring alert for a Cloud Run service.

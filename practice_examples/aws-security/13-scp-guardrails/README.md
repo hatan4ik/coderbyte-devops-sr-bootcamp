@@ -32,3 +32,12 @@ terraform plan
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  PB[Permission Boundary pb-restrict] --> U[User scptest]
+  U -->|attached| P1[Least-priv S3 policy]
+  U -->|attached| SCP[Inline deny: trail/GD tamper + no MFA]
+  SCP -.simulates.-> OrgSCP[Org SCP]
+```

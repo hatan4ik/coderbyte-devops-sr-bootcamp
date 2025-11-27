@@ -32,3 +32,11 @@ terraform plan -var 'secret_name=demo/rotated-secret'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  Sec[Secrets Manager secret] --> Rot[Rotation schedule]
+  Rot --> L[Lambda rotation fn]
+  L -->|IAM| RRole[Rotation role (least priv)]
+```
