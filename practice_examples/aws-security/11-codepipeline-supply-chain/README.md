@@ -33,3 +33,14 @@ terraform plan -var 'artifact_bucket=your-artifacts-bucket'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  S3[S3 source artifact] --> CP[CodePipeline]
+  CP --> CB[CodeBuild scan stage]
+  CP --> ART[S3 artifacts]
+  KMS[KMS key] --> ART
+  KMS --> CP
+  CB --> LOGS[CW Logs]
+```

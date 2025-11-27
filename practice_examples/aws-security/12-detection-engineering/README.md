@@ -34,3 +34,11 @@ terraform plan
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  EB1[EventBridge rule: root login] --> SNS[SNS security-alerts]
+  EB2[EventBridge rule: IAM changes] --> SNS
+  SNS --> Receivers[Subscriptions (add email/SQS/Lambda)]
+```

@@ -31,3 +31,11 @@ terraform plan -var 'department=engineering'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  IdP[Federated IdP/Caller] -->|TagSession dept| Role[abac-role]
+  Role --> Policy[ABAC policy]
+  Policy --> S3[Resources with department tag]
+```
