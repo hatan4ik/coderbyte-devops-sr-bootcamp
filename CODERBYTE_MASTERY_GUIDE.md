@@ -316,7 +316,7 @@ terraform state show <resource>
 - Helm + policy: `practice_examples/helm-policy/` (Helm chart lint + Conftest OPA checks).
 - AWS budget alert: `practice_examples/aws-budget/` (Terraform budget with email notification).
 - CNI/Iptables drill: `practice_examples/networking-debug/cni-misroute/` (simulate DNS DROP rule, detect/rollback).
-- AWS security labs: IAM/OIDC/VPC (`practice_examples/aws-security/01-iam-basics`, `02-iam-oidc-role`, `03-vpc-network-security`), CloudTrail/GuardDuty (`04-cloudtrail-guardduty`), EC2+SSM+IMDSv2 (`05-ec2-ssm-imdsv2`), ECR+Lambda hardening (`06-ecr-lambda-hardening`), incident response quarantine (`08-incident-response`).
+- AWS security labs: IAM/OIDC/VPC (`practice_examples/aws-security/01-iam-basics`, `02-iam-oidc-role`, `03-vpc-network-security`), CloudTrail/GuardDuty (`04-cloudtrail-guardduty`), EC2+SSM+IMDSv2 (`05-ec2-ssm-imdsv2`), ECR+Lambda hardening (`06-ecr-lambda-hardening`), CI supply chain (`07-cicd-supply-chain`), incident response quarantine (`08-incident-response`), cross-account IAM (`09-cross-account-iam`), ABAC/federation (`10-abac-sso`).
 
 ### Week 5-6: Expert (Proficient → Hero)
 

@@ -1,0 +1,328 @@
+{
+  "Comment": "Order Processing Saga with Compensation",
+  "StartAt": "ValidateOrder",
+  "States": {
+    "ValidateOrder": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ValidateOrderFunction}",
+        "Payload": {
+          "order.$": "$.order",
+          "execution_id.$": "$$.Execution.Name"
+        }
+      },
+      "ResultPath": "$.validation",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "ValidationFailed"
+        }
+      ],
+      "Next": "ReserveInventory"
+    },
+    "ReserveInventory": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ReserveInventoryFunction}",
+        "Payload": {
+          "order.$": "$.order",
+          "execution_id.$": "$$.Execution.Name"
+        }
+      },
+      "ResultPath": "$.reservation",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 1,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "ReservationFailed"
+        }
+      ],
+      "Next": "ProcessPayment"
+    },
+    "ProcessPayment": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ProcessPaymentFunction}",
+        "Payload": {
+          "order.$": "$.order",
+          "reservation.$": "$.reservation.Payload",
+          "execution_id.$": "$$.Execution.Name"
+        }
+      },
+      "ResultPath": "$.payment",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 1.5
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "ReleaseInventory"
+        }
+      ],
+      "Next": "ParallelProcessing"
+    },
+    "ParallelProcessing": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "CreateShipment",
+          "States": {
+            "CreateShipment": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${CreateShipmentFunction}",
+                "Payload": {
+                  "order.$": "$.order",
+                  "payment.$": "$.payment.Payload",
+                  "execution_id.$": "$$.Execution.Name"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.TaskFailed"],
+                  "IntervalSeconds": 3,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.shipment_error",
+                  "Next": "ShipmentFailed"
+                }
+              ],
+              "End": true
+            },
+            "ShipmentFailed": {
+              "Type": "Pass",
+              "Result": {
+                "status": "shipment_failed"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "SendConfirmationEmail",
+          "States": {
+            "SendConfirmationEmail": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendEmailFunction}",
+                "Payload": {
+                  "order.$": "$.order",
+                  "execution_id.$": "$$.Execution.Name"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.TaskFailed"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.email_error",
+                  "Next": "EmailFailedDLQ"
+                }
+              ],
+              "End": true
+            },
+            "EmailFailedDLQ": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::sqs:sendMessage",
+              "Parameters": {
+                "QueueUrl": "${DLQUrl}",
+                "MessageBody": {
+                  "error.$": "$.email_error",
+                  "order.$": "$.order"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "UpdateAnalytics",
+          "States": {
+            "UpdateAnalytics": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${UpdateAnalyticsFunction}",
+                "Payload": {
+                  "order.$": "$.order",
+                  "execution_id.$": "$$.Execution.Name"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.TaskFailed"],
+                  "IntervalSeconds": 2,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.analytics_error",
+                  "Next": "AnalyticsFailedIgnore"
+                }
+              ],
+              "End": true
+            },
+            "AnalyticsFailedIgnore": {
+              "Type": "Pass",
+              "Comment": "Analytics failure doesn't block order",
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.parallel_results",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.parallel_error",
+          "Next": "CheckShipmentStatus"
+        }
+      ],
+      "Next": "OrderCompleted"
+    },
+    "CheckShipmentStatus": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.parallel_results[0].status",
+          "StringEquals": "shipment_failed",
+          "Next": "CompensatePayment"
+        }
+      ],
+      "Default": "OrderCompleted"
+    },
+    "CompensatePayment": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${RefundPaymentFunction}",
+        "Payload": {
+          "payment.$": "$.payment.Payload",
+          "reason": "shipment_failed",
+          "execution_id.$": "$$.Execution.Name"
+        }
+      },
+      "ResultPath": "$.refund",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 5,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "ReleaseInventory"
+    },
+    "ReleaseInventory": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ReleaseInventoryFunction}",
+        "Payload": {
+          "reservation.$": "$.reservation.Payload",
+          "execution_id.$": "$$.Execution.Name"
+        }
+      },
+      "ResultPath": "$.release",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 3,
+          "MaxAttempts": 5,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "NotifyCustomerFailure"
+    },
+    "NotifyCustomerFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${NotificationTopic}",
+        "Subject": "Order Processing Failed",
+        "Message": {
+          "order.$": "$.order",
+          "error.$": "$.error",
+          "execution_id.$": "$$.Execution.Name"
+        }
+      },
+      "Next": "OrderFailed"
+    },
+    "ValidationFailed": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${NotificationTopic}",
+        "Subject": "Order Validation Failed",
+        "Message": {
+          "order.$": "$.order",
+          "error.$": "$.error"
+        }
+      },
+      "Next": "OrderFailed"
+    },
+    "ReservationFailed": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${NotificationTopic}",
+        "Subject": "Inventory Reservation Failed",
+        "Message": {
+          "order.$": "$.order",
+          "error.$": "$.error"
+        }
+      },
+      "Next": "OrderFailed"
+    },
+    "OrderCompleted": {
+      "Type": "Succeed"
+    },
+    "OrderFailed": {
+      "Type": "Fail",
+      "Error": "OrderProcessingFailed",
+      "Cause": "Order processing failed with compensation"
+    }
+  }
+}

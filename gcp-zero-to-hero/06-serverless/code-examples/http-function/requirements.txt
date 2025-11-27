@@ -1,0 +1,5 @@
+# This file lists the Python dependencies for the Cloud Function.
+
+# The Functions Framework is required by GCP to wrap your function
+# and serve it as a web service. It's also useful for local testing.
+functions-framework==3.*
