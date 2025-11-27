@@ -32,3 +32,12 @@ terraform plan -var 'project_name=secure-build' -var 'artifact_bucket=your-artif
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  SRC[No source / repo] --> CB[CodeBuild project]
+  CB -->|Trivy/Semgrep| OUT[Logs]
+  KMS[KMS key] --> CB
+  KMS --> ART[S3 artifacts (optional)]
+```

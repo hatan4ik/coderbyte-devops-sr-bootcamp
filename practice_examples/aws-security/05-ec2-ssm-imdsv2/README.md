@@ -33,3 +33,13 @@ terraform plan
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  LT[Launch Template] --> IMDS[IMDSv2 required]
+  LT --> IP[Instance Profile (SSM only)]
+  LT --> SG[SG: HTTPS egress only]
+  EC2[EC2 Instance] -->|launches with| LT
+  EC2 --> SSM[SSM Session Manager]
+```

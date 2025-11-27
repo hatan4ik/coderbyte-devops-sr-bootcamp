@@ -32,3 +32,18 @@ terraform plan
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  V[VPC 10.80.0.0/16]
+  V --> PUB[Public Subnet 10.80.1.0/24]
+  V --> PRIV[Private Subnet 10.80.2.0/24]
+  PUB --> IGW[Internet Gateway]
+  PUB --> NAT[NAT GW]
+  PRIV --> NAT
+  V --> S3EP[S3 VPC Endpoint]
+  V --> DYN[DynamoDB VPC Endpoint]
+  WEB[SG web_sg 80/443] --> Apps
+  APP[SG app_sg 8080] --> PRIV
+```

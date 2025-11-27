@@ -32,3 +32,13 @@ terraform plan -var 'lambda_name=secure-lambda'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  ECR[ECR repo
+scan_on_push+retention] --> IMG[Images]
+  IMG --> L[Lambda]
+  L -->|role| R[IAM role (logs only)]
+  L --> CW[CloudWatch Logs]
+```

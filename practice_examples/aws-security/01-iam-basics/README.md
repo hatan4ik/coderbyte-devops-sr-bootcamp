@@ -33,3 +33,12 @@ terraform plan -var 'allowed_bucket=my-secure-bucket'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  U[devuser] --> G[developers group]
+  G -->|inline policy| B[S3 bucket limited access]
+  U -->|inline| M[Require MFA policy]
+  M --> D[Deny if no MFA]
+```

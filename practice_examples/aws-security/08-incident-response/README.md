@@ -25,3 +25,13 @@ python quarantine_user.py <username>
 
 ## Cleanup
 - Manually remove the inline policy and reattach required policies if restoring access.
+
+## Diagram
+```mermaid
+graph TD
+  SuspiciousUser[User to quarantine]
+  Script[quarantine_user.py] --> Detach[Detach policies]
+  Script --> DisableKeys[Disable access keys]
+  Script --> DenyAll[Attach deny-all inline]
+  SuspiciousUser -->|actions applied| DenyAll
+```

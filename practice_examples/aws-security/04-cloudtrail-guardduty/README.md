@@ -32,3 +32,13 @@ terraform plan -var 'trail_bucket=your-trail-bucket-name'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  CT[CloudTrail (multi-region)] --> SB[S3 trail bucket (SSE+versioning+block public)]
+  CT --> GF[Log file validation]
+  GD[GuardDuty Detector]:::detect
+
+  classDef detect fill:#ffecec,stroke:#f00,stroke-width:1px;
+```

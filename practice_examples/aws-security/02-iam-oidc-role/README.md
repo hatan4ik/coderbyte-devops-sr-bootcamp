@@ -32,3 +32,11 @@ terraform plan -var 'repo=your-org/your-repo' -var 'bucket=your-ci-bucket'
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  GH[GitHub Actions OIDC] -->|AssumeRoleWithWebIdentity| R[ci-oidc-role]
+  R --> P[Policy: S3 limited]
+  P --> B[S3 bucket]
+```

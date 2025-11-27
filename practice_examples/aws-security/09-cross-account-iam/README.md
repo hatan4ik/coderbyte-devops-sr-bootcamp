@@ -31,3 +31,11 @@ terraform plan -var 'trusted_account_id=123456789012' -var 'external_id=your-ext
 ```bash
 terraform destroy
 ```
+
+## Diagram
+```mermaid
+graph TD
+  AccA[Account A] --> Role[Role cross-account-reader]
+  AccB[Account B] -->|Assume with ExternalId| Role
+  Role --> S3[S3 bucket scoped access]
+```
