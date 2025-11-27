@@ -1,0 +1,148 @@
+{
+  "DenyRootAccountUsage": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "DenyRootAccount",
+        "Effect": "Deny",
+        "Action": "*",
+        "Resource": "*",
+        "Condition": {
+          "StringLike": {
+            "aws:PrincipalArn": "arn:aws:iam::*:root"
+          }
+        }
+      }
+    ]
+  },
+  "RequireEncryption": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "DenyUnencryptedS3",
+        "Effect": "Deny",
+        "Action": "s3:PutObject",
+        "Resource": "*",
+        "Condition": {
+          "StringNotEquals": {
+            "s3:x-amz-server-side-encryption": ["AES256", "aws:kms"]
+          }
+        }
+      },
+      {
+        "Sid": "DenyUnencryptedEBS",
+        "Effect": "Deny",
+        "Action": "ec2:RunInstances",
+        "Resource": "arn:aws:ec2:*:*:volume/*",
+        "Condition": {
+          "Bool": {
+            "ec2:Encrypted": "false"
+          }
+        }
+      }
+    ]
+  },
+  "RequireRegions": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "DenyNonApprovedRegions",
+        "Effect": "Deny",
+        "NotAction": [
+          "iam:*",
+          "organizations:*",
+          "route53:*",
+          "cloudfront:*",
+          "support:*"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "StringNotEquals": {
+            "aws:RequestedRegion": [
+              "us-east-1",
+              "us-west-2",
+              "eu-west-1"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "RequireTags": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "RequireTagsOnEC2",
+        "Effect": "Deny",
+        "Action": [
+          "ec2:RunInstances"
+        ],
+        "Resource": [
+          "arn:aws:ec2:*:*:instance/*"
+        ],
+        "Condition": {
+          "Null": {
+            "aws:RequestTag/Environment": "true",
+            "aws:RequestTag/Owner": "true",
+            "aws:RequestTag/CostCenter": "true"
+          }
+        }
+      }
+    ]
+  },
+  "DenyPublicS3": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "DenyPublicS3Buckets",
+        "Effect": "Deny",
+        "Action": [
+          "s3:PutBucketPublicAccessBlock"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "Bool": {
+            "s3:BlockPublicAcls": "false",
+            "s3:BlockPublicPolicy": "false",
+            "s3:IgnorePublicAcls": "false",
+            "s3:RestrictPublicBuckets": "false"
+          }
+        }
+      }
+    ]
+  },
+  "PreventSecurityChanges": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "PreventCloudTrailDisable",
+        "Effect": "Deny",
+        "Action": [
+          "cloudtrail:StopLogging",
+          "cloudtrail:DeleteTrail"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Sid": "PreventConfigDisable",
+        "Effect": "Deny",
+        "Action": [
+          "config:DeleteConfigurationRecorder",
+          "config:DeleteDeliveryChannel",
+          "config:StopConfigurationRecorder"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Sid": "PreventGuardDutyDisable",
+        "Effect": "Deny",
+        "Action": [
+          "guardduty:DeleteDetector",
+          "guardduty:DisassociateFromMasterAccount",
+          "guardduty:StopMonitoringMembers"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
+}
