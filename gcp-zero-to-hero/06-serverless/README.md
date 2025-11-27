@@ -1,22 +1,29 @@
-# Module 6: GCP Serverless
+# Module 6: Serverless Computing
 
-This module introduces GCP's powerful serverless computing platforms, which allow you to run code and containers without managing the underlying servers. We will focus on **Cloud Functions** for event-driven code and **Cloud Run** for serverless containers.
+Welcome to Module 6. This section focuses on GCP's serverless offerings, allowing you to run code without provisioning or managing servers. We will explore Cloud Functions for event-driven code and Cloud Run for serving containerized applications.
 
-## Key Topics
+## Learning Objectives
 
-### Cloud Functions
-1.  **Event-Driven Computing**: Understanding the concept of functions as a service (FaaS).
-2.  **Triggers**: Creating functions that respond to various event sources, such as HTTP requests, Pub/Sub messages, or Cloud Storage object changes.
-3.  **Runtimes**: Writing functions in various supported languages like Python, Node.js, and Go.
-4.  **Security**: Securing functions using IAM and invocation policies.
+- Understand the principles of serverless computing.
+- Create and deploy event-driven functions using Google Cloud Functions.
+- Deploy and manage stateless containers with Google Cloud Run.
+- Differentiate between Cloud Functions, Cloud Run, and App Engine.
+- Configure triggers for Cloud Functions.
 
-### Cloud Run
-1.  **Serverless Containers**: Deploying and scaling containerized applications automatically.
-2.  **Container Workflow**: The process of building a container image, pushing it to Artifact Registry, and deploying it to Cloud Run.
-3.  **Revisions**: Managing different versions of your service and splitting traffic between them.
-4.  **Autoscaling**: How Cloud Run scales from zero to N instances based on incoming requests.
+## What is Serverless?
 
-## Labs
+Serverless computing is a cloud execution model where the cloud provider dynamically manages the allocation and provisioning of servers. You write the code, and the cloud provider handles the rest. This model is great for microservices, event-driven architectures, and mobile backends.
 
-- **Problem 1**: Write and deploy a simple HTTP-triggered Cloud Function using Python.
-- **Problem 2**: Build a container image for a simple web application, push it to Artifact Registry, and deploy it as a public service on Cloud Run.
+## Google Cloud Functions
+
+**Google Cloud Functions** is a lightweight, event-based, asynchronous compute solution that allows you to create small, single-purpose functions that respond to cloud events without the need to manage a server or a runtime environment.
+
+## Google Cloud Run
+
+**Google Cloud Run** is a managed compute platform that enables you to run stateless containers that are invocable via web requests or Pub/Sub events. Cloud Run is serverless: it abstracts away all infrastructure management, so you can focus on what matters most — building great applications.
+
+## Module Structure
+
+- **Code Examples**: Examples of a Python Cloud Function, a Terraform-managed function, and a deployment script for Cloud Run.
+- **Problem 1: Create a Cloud Function**: A hands-on lab to create a simple HTTP-triggered Cloud Function.
+- **Problem 2: Deploy a Service to Cloud Run**: A practical exercise to deploy a containerized application to Cloud Run.
