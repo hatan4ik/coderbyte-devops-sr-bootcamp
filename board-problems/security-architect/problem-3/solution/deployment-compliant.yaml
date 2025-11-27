@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-app
+  namespace: secure-apps
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: secure-app
+  template:
+    metadata:
+      labels:
+        app: secure-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: app
+        image: nginx:1.25-alpine
+        ports:
+        - containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop: [ALL]
+        volumeMounts:
+        - name: cache
+          mountPath: /var/cache/nginx
+        - name: run
+          mountPath: /var/run
+      volumes:
+      - name: cache
+        emptyDir: {}
+      - name: run
+        emptyDir: {}
