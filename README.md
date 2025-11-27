@@ -45,39 +45,10 @@ This repository provides a complete, production-grade training platform organize
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-```bash
-# macOS
-brew install python docker kubectl terraform make jq
-
-# Linux
-apt-get install python3 docker.io kubectl terraform make jq
-
-# Verify installations
-python3 --version
-docker --version
-kubectl version --client
-terraform --version
-```
-
-### Installation
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd coderbyte-devops-sr-bootcamp
-
-# Install dependencies
-make setup
-
-# Run interactive menu
-./menu.sh
-
-# Or run specific module
-cd modules/A_zero_to_hero
-./run_tests.sh
-```
+1) Read `CODERBYTE_MASTERY_GUIDE.md` for the zero→hero path and follow the numbered sequence.  
+2) Run labs as you go: see `practice_examples/` and module READMEs for instructions.  
+3) Use `INDEX.md` to jump to modules, exams, or specific labs.  
+4) When ready, attempt the Module B mock exams and the Module C full project.
 
 ## ✅ Quality Gates
 - **Pre-commit**: run `pre-commit install` to enforce formatting (black/ruff), YAML lint, shell/Docker lint, and Terraform fmt/validate/tflint/tfsec.

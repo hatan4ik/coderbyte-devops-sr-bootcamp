@@ -1,6 +1,11 @@
 # 🎯 Coderbyte DevOps Assessment Mastery Guide
 ## Zero → Hero → Offer Letter
 
+### How to Use This Guide
+- Follow the numbered path; run the linked labs as you go.
+- Keep `INDEX.md` handy for navigation; use module READMEs for specifics.
+- Aim to complete Module B exams and Module C once you’ve covered each domain.
+
 ### Recommended Learning Order (Zero → Hero)
 1) **Foundations** – Module A Bash/Python/Go (daily reps) + scripting labs (`bash-top-ips`, `python-concurrent-fetch`, `go-http-service`, `log-streamer`).
 2) **Containers** – Harden Dockerfiles and supply chain (`container-sbom`, `helm-policy`); run scans/signing.

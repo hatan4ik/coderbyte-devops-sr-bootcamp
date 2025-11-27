@@ -12,3 +12,4 @@ terraform plan -var 'email=you@example.com'
 ```
 
 Set `email` to your alert recipient. This is a minimal example; adjust amount/period/notification as needed.
+Tests: fmt/validate/plan are the checks; no automated tests.

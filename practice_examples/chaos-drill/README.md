@@ -10,3 +10,4 @@ Simple chaos script to delete pods matching a label every N seconds to observe r
 - Second arg: interval seconds (default 60).
 
 Ensure PDB/HPA and readiness/liveness probes are in place before running. Stop with Ctrl+C.
+Tests: manual verification—monitor rollout stability, HPA behavior, and absence of 503s during chaos window.

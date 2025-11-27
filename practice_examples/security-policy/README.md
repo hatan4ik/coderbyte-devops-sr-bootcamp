@@ -9,6 +9,7 @@ Minimal example showing how to enforce signed images and scan IaC using Conftest
 - `samples/` — Sample Kubernetes Deployment and Terraform plan output for testing.
 - `verify_cosign.sh` — Verify image signatures with cosign if configured.
 - `gatekeeper/` — Gatekeeper ConstraintTemplate + Constraint to require trusted/signed images.
+- `kyverno-supply-chain/` — Kyverno ClusterPolicy enforcing trusted/signed images (cosign key placeholder).
 
 ## Usage
 ```bash

@@ -6,6 +6,7 @@ Two lightweight scenarios: a CPU hog diagnosis checklist and a CoreDNS/DNS failu
 - `cpu_hog.sh` — Simple CPU hog to reproduce high CPU; includes a diagnostic checklist.
 - `dns_scenario.md` — Steps to simulate and debug CoreDNS misconfig (bad ConfigMap), commands to verify and fix.
 - `dns_test_pod.yaml` — Busybox test pod to run `nslookup/dig` inside cluster.
+- `cni-misroute/` — Optional drill to inject/fix DNS DROP iptables rule (sandbox only).
 
 ## Usage
 ```bash
@@ -19,3 +20,4 @@ kubectl exec -it dns-debug -- nslookup kubernetes.default
 ```
 
 Use `dns_scenario.md` to introduce a broken CoreDNS ConfigMap and then walk through detection/rollback.
+Tests: manual—observe CPU spike and identify with tools; for DNS drills, confirm failure then recovery after fix.

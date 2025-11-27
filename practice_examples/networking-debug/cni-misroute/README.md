@@ -24,3 +24,4 @@ kubectl exec -it dns-debug -- nslookup kubernetes.default   # should succeed
 ```
 
 Use only in a controlled environment (kind/k3d). Do NOT run on shared/prod clusters.
+Tests: manual—confirm failure after DROP and success after cleanup.

@@ -69,7 +69,6 @@ coderbyte-devops-sr-bootcamp/
 
 1. **[Exam 01](modules/B_mock_exam/exam_01/)** - Web Service + Docker + Terraform + K8s
    - [instructions.md](modules/B_mock_exam/exam_01/instructions.md)
-   - [SOLUTION.md](modules/B_mock_exam/exam_01/SOLUTION.md)
 
 2. **[Exam 02](modules/B_mock_exam/exam_02/)** - Log Pipeline + S3 + CI
    - [instructions.md](modules/B_mock_exam/exam_02/instructions.md)

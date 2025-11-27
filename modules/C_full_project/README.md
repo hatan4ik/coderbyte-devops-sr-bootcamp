@@ -30,6 +30,10 @@ Enterprise-ready end-to-end DevOps project demonstrating best practices for cont
 │   └── terraform-checks.yaml  # Terraform fmt/validate/tflint/tfsec
 └── Makefile              # Common operations
 
+Related Labs for practice:
+- Observability stack wiring: `practice_examples/observability-stack/`
+- K8s hardening: `practice_examples/k8s-hardening/`
+
 ## Features
 
 ### Application (app.py)

@@ -12,3 +12,4 @@ kubectl apply -f require-signed-images.yaml
 ```
 
 Adjust `spec.rules.verifyImages` to match your registries and verification config.
+Tests: validate with `kubectl apply --dry-run=client -f require-signed-images.yaml`; enforce in a test cluster with unsigned/signed images.

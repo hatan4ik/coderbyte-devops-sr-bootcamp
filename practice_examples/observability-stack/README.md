@@ -23,3 +23,4 @@ kubectl create configmap slo-alerts --from-file=k8s/alerts.yaml -n monitoring
 ```
 
 Adjust namespaces/selectors to match your cluster (e.g., monitoring stack). Dashboard JSON can be imported into Grafana.
+Tests: use `kubeconform` for schema validation; ensure Prometheus sees `/metrics` and alerts fire under induced errors/latency.
