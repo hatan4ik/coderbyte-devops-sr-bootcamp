@@ -29,6 +29,7 @@ Enterprise-ready end-to-end DevOps project demonstrating best practices for cont
 │   ├── full-project-ci.yaml   # Lint, test, build, scan
 │   └── terraform-checks.yaml  # Terraform fmt/validate/tflint/tfsec
 └── Makefile              # Common operations
+└── DEPLOY.md             # Step-by-step deploy
 
 Related Labs for practice:
 - Observability stack wiring: `practice_examples/observability-stack/`

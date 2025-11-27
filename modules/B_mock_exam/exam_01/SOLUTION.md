@@ -1,71 +1,49 @@
-# Exam 01 Solution - Production-Grade Implementation
+# Mock Exam #1 – Reference Solution Outline
 
-## Overview
-Complete production-ready implementation with security hardening, observability, and best practices.
+Use this as a rubric/example; adapt to your environment.
 
-## Application (app.py)
-✅ Health endpoint at `/health`
-✅ Structured logging with request IDs
-✅ Graceful shutdown handling
-✅ Thread-safe HTTP server
-✅ Environment-based configuration
+## 1) App (Python)
+- Add `/health` endpoint returning `{"status":"ok"}`.
+- Add basic logging for each request.
 
-## Docker (Dockerfile)
-✅ Multi-stage build (reduced size)
-✅ Non-root user (UID 1000)
-✅ Minimal base image
-✅ Health check with curl
-✅ Security best practices
+## 2) Dockerfile
+- Use `python:3.11-slim`.
+- Copy app + requirements; install deps with `--no-cache-dir`.
+- Create non-root user; set `PYTHONDONTWRITEBYTECODE`/`PYTHONUNBUFFERED`.
+- Add `HEALTHCHECK` on `/health`.
 
-## Terraform (terraform/main.tf)
-✅ S3 bucket with encryption
-✅ Versioning enabled
-✅ Public access blocked
-✅ Lifecycle policies
-✅ Proper tagging
-✅ Output values
+## 3) Terraform
+- Define `variable "environment" {}`.
+- Create an S3 bucket (or mock resource) with versioning enabled.
+- Tag resources.
 
-## Kubernetes (k8s/)
-✅ Deployment with 2 replicas
-✅ Security contexts enforced
-✅ Resource limits set
-✅ Liveness and readiness probes
-✅ Rolling update strategy
-✅ Service with ClusterIP
+## 4) Kubernetes
+- Deployment (2 replicas) using your image.
+- Probes: liveness/readiness on `/health` port 8000.
+- Security: runAsNonRoot, drop ALL caps, readOnlyRootFilesystem.
+- Service exposing port 8000.
 
-## Quick Start
-
+## Commands (example)
 ```bash
-# Build Docker image
-docker build -t exam01-http:latest .
+# app
+python app.py
 
-# Run locally
-docker run -p 8000:8000 exam01-http:latest
+# docker
+docker build -t yourrepo/exam01:dev -f starter/Dockerfile ./starter
 
-# Test
-curl http://localhost:8000/health
+# terraform
+cd starter/terraform
+terraform init -backend=false
+terraform fmt -check && terraform validate && terraform plan
 
-# Deploy to Kubernetes
-kubectl apply -f k8s/
-
-# Initialize Terraform
-cd terraform && terraform init && terraform plan
+# k8s
+kubectl apply -f starter/k8s/deployment.yaml
+kubectl apply -f starter/k8s/service.yaml
+kubectl rollout status deploy/devops-demo
+kubectl get pods -l app=devops-demo
 ```
 
-## Security Features
-- Non-root container execution
-- Read-only root filesystem
-- Dropped capabilities
-- Network policies ready
-- Encrypted S3 storage
-- Public access blocked
-
-## Production Checklist
-- [x] Multi-stage Docker build
-- [x] Security contexts configured
-- [x] Resource limits defined
-- [x] Health checks implemented
-- [x] Graceful shutdown
-- [x] Structured logging
-- [x] Infrastructure encrypted
-- [x] Versioning enabled
+## Notes
+- Keep image non-root and add `.dockerignore` for lean builds.
+- Probes + resource requests help with stability during rollout.
+- Use `terraform plan` output as evidence; no need to apply in exam environment unless required.

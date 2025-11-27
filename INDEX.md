@@ -69,6 +69,7 @@ coderbyte-devops-sr-bootcamp/
 
 1. **[Exam 01](modules/B_mock_exam/exam_01/)** - Web Service + Docker + Terraform + K8s
    - [instructions.md](modules/B_mock_exam/exam_01/instructions.md)
+   - [SOLUTION.md](modules/B_mock_exam/exam_01/SOLUTION.md) (reference outline)
 
 2. **[Exam 02](modules/B_mock_exam/exam_02/)** - Log Pipeline + S3 + CI
    - [instructions.md](modules/B_mock_exam/exam_02/instructions.md)
@@ -107,6 +108,7 @@ coderbyte-devops-sr-bootcamp/
 **Location**: `modules/C_full_project/`
 
 - [README.md](modules/C_full_project/README.md) - Complete documentation
+- [DEPLOY.md](modules/C_full_project/DEPLOY.md) - End-to-end deploy guide
 - [app/app.py](modules/C_full_project/app/app.py) - Production application
 - [docker/Dockerfile](modules/C_full_project/docker/Dockerfile) - Multi-stage build
 - [terraform/main.tf](modules/C_full_project/terraform/main.tf) - Infrastructure
