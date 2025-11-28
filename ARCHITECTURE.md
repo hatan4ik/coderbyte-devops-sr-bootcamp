@@ -1,61 +1,64 @@
 # Architecture & Best Practices
 
-This document outlines the architectural decisions and best practices implemented across the Coderbyte DevOps Sr Bootcamp repository.
+Board-reviewed reference for production patterns used across this bootcamp. Each section pairs principles with runnable examples/problems/solutions already in the repo (FAANG-style: opinionated defaults, measurable outcomes).
 
 ## Design Principles
 
 ### 1. Security First
-- **Least Privilege**: All IAM roles, RBAC, and permissions follow least privilege
-- **Defense in Depth**: Multiple security layers (network policies, security contexts, encryption)
-- **Zero Trust**: Network policies enforce explicit allow rules
-- **Secrets Management**: No hardcoded secrets, use external secret managers
-- **Vulnerability Scanning**: Automated scanning in CI/CD pipelines
+- **Least Privilege**: IAM, RBAC, and pipeline permissions scoped tightly; OIDC over long-lived keys.
+- **Defense in Depth**: NetworkPolicies, securityContext, encryption at rest/in transit.
+- **Zero Trust**: Default-deny networking with explicit ingress/egress.
+- **Secrets Management**: No hardcoded secrets; external managers only.
+- **Vulnerability Scanning**: Trivy/Semgrep/Gitleaks in CI; fail on HIGH/CRIT.
+- **Example**: `modules/C_full_project/k8s/base/deployment.yaml` (non-root, dropped caps, probes, limits).
 
 ### 2. Production Ready
-- **High Availability**: PDBs, anti-affinity, multi-replica deployments
-- **Observability**: Structured logging, metrics, health checks
-- **Graceful Degradation**: Proper error handling and fallbacks
-- **Resource Management**: Limits, requests, and autoscaling configured
-- **Disaster Recovery**: Backup strategies and rollback procedures
+- **High Availability**: Multi-replica + PDB + anti-affinity; rolling updates.
+- **Observability**: Structured logs, metrics, health probes, tracing hooks.
+- **Graceful Degradation**: Safe fallbacks + backpressure; timeouts/retries with jitter.
+- **Resource Management**: Requests/limits, HPA/VPA where appropriate.
+- **Disaster Recovery**: Backups + tested restores; rollback-first mindset.
+- **Example**: `modules/C_full_project/k8s/base/hpa.yaml` and `modules/C_full_project/DEPLOY.md`.
 
 ### 3. Infrastructure as Code
-- **Version Control**: All infrastructure defined in code
-- **Immutable Infrastructure**: No manual changes, rebuild instead
-- **Declarative Configuration**: Desired state, not imperative steps
-- **Modular Design**: Reusable components and modules
-- **Testing**: Validation and testing before deployment
+- **Version Control**: Everything in git; no console drift.
+- **Immutable Infrastructure**: Rebuild, don’t mutate.
+- **Declarative Configuration**: Desired state > imperative commands.
+- **Modular Design**: Reusable modules/overlays; DRY variables and locals.
+- **Validation**: fmt/validate/tflint/tfsec + policy-as-code gates.
+- **Example**: `modules/C_full_project/terraform/main.tf` and `practice_examples/terraform-vpc/`.
 
 ### 4. DevOps Culture
-- **Automation**: CI/CD pipelines for all deployments
-- **GitOps**: Git as single source of truth
-- **Collaboration**: Clear documentation and runbooks
-- **Continuous Improvement**: Regular reviews and updates
-- **Shift Left**: Security and testing early in pipeline
+- **Automation**: Pipelines for build/test/scan/deploy; no manual hotfixing.
+- **GitOps**: Git as source of truth; ArgoCD/Kustomize overlays.
+- **Collaboration**: Runbooks + module READMEs; small PRs with tests.
+- **Continuous Improvement**: Postmortems feed back into tests/policies.
+- **Shift Left**: Security and tests pre-merge.
+- **Example**: `.github/workflows/full-project-ci.yaml` + `modules/B_mock_exam/exam_03/` GitOps flow.
 
 ## Technology Stack
 
 ### Container Platform
-- **Docker**: Multi-stage builds, non-root users, minimal images
-- **Kubernetes**: Orchestration with security contexts and policies
-- **Kustomize**: Environment-specific overlays without templating
-- **ArgoCD**: GitOps continuous deployment
+- **Docker**: Multi-stage, slim, non-root; SBOM + signing ready (`modules/C_full_project/docker/Dockerfile`, `practice_examples/container-sbom/`).
+- **Kubernetes**: Restricted pod security, probes/limits, NetworkPolicies (`modules/C_full_project/k8s/`).
+- **Kustomize**: Overlays per env (`modules/C_full_project/k8s/overlays/`).
+- **ArgoCD**: GitOps deployment (`modules/B_mock_exam/exam_03/`).
 
 ### Infrastructure
-- **Terraform**: Infrastructure provisioning with state management
-- **AWS**: Cloud provider (examples use AWS, adaptable to others)
-- **CloudWatch**: Logging and monitoring
+- **Terraform**: Remote state, locking, validation (`modules/C_full_project/terraform/`, `practice_examples/terraform-vpc/`).
+- **AWS**: Default examples; patterns adapt to other clouds.
+- **CloudWatch**: Logging/metrics integration; swap for Stackdriver/Log Analytics as needed.
 
 ### CI/CD
-- **GitHub Actions**: Automated workflows
-- **Trivy**: Container and filesystem vulnerability scanning
-- **Semgrep**: Static application security testing (SAST)
-- **Gitleaks**: Secret detection
+- **GitHub Actions**: Reusable templates; gating on lint/test/scan (`.github/workflows/`).
+- **Security Scans**: Trivy, Semgrep, Gitleaks baked into pipelines.
+- **Supply Chain**: SBOM (syft), signing (cosign), provenance (where supported).
 
 ### Languages
-- **Python**: Application development with standard library
-- **Bash**: Automation scripts and utilities
-- **Go**: High-performance tooling and services
-- **HCL**: Terraform configurations
+- **Python**: App/service patterns with health/metrics (`modules/C_full_project/app/`).
+- **Bash**: Hardened scripts with `set -euo pipefail` (`modules/A_zero_to_hero/bash-basics/`).
+- **Go**: Services/tools with graceful shutdown (`modules/A_zero_to_hero/go-basics/`).
+- **HCL**: Terraform configurations with validation and tagging.
 
 ## Security Architecture
 
@@ -321,3 +324,13 @@ Application → OpenTelemetry → Jaeger/Tempo
 3. **Multi-Cloud**: Extend to GCP/Azure for cloud-agnostic deployments
 4. **Advanced Monitoring**: Implement SLIs/SLOs/SLAs with error budgets
 5. **ML Ops**: Add model deployment and monitoring capabilities
+
+## Problem/Solution References (FAANG-style)
+- **Container hardening**: `coderbyte-problems/container-tasks/problem-01-optimize-dockerfile/solution/` — multi-stage, non-root, healthcheck, pinned base.
+- **Pod crash debugging**: `coderbyte-problems/debugging-tasks/problem-01-crashloop/solution/` — ConfigMap fix + probes + non-root.
+- **K8s manifest fixes**: `coderbyte-problems/kubernetes-tasks/problem-01-fix-deployment/solution/deployment.yaml` — probes, limits, securityContext, rolling updates.
+- **GitOps pipeline**: `modules/B_mock_exam/exam_03/` — Kustomize overlays + ArgoCD app.
+- **Terraform security**: `coderbyte-problems/terraform-tasks/problem-01-secure-infrastructure/solution/main.tf` — encryption, public access block, versioning.
+- **CI supply chain**: `practice_examples/container-sbom/` — syft SBOM + cosign signing + Trivy scan.
+- **Observability**: `practice_examples/observability-slo/` — `/metrics`, alerts, tests; `practice_examples/observability-stack/` — full stack deploy.
+- **Policy as code**: `practice_examples/security-policy/` — OPA/Conftest/Kyverno guardrails for K8s and Terraform.

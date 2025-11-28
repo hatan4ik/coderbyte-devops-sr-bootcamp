@@ -2,8 +2,6 @@
 
 # Configure the Google Cloud provider
 provider "google" {
-  project = "gcp-hero-lab-01" # Change to your project ID
-  region  = "us-central1"
   project = var.project_id
   region  = var.region
 }
@@ -40,10 +38,6 @@ resource "random_password" "db_password" {
 }
 
 # Define the Cloud SQL PostgreSQL instance
-resource "google_sql_database_instance" "postgres_instance" {
-  name             = "postgres-main-instance"
-  database_version = "POSTGRES_13"
-  region           = "us-central1"
 resource "google_sql_database_instance" "main_instance" {
   name             = "postgres-${var.environment}-instance"
   database_version = "POSTGRES_13" # Consider making this a variable
@@ -51,8 +45,6 @@ resource "google_sql_database_instance" "main_instance" {
   database_version = "POSTGRES_13" # Example: Use a specific version
 
   settings {
-    # Use a small, cost-effective tier for the lab
-    tier = "db-g1-small"
     # Production-grade tier (example, adjust based on workload)
     tier = var.instance_tier
     disk_size = var.disk_size_gb
@@ -99,9 +91,6 @@ resource "google_sql_database_instance" "main_instance" {
     }
   }
 
-  # IMPORTANT: For labs, we disable deletion protection.
-  # In production, this should always be `true`.
-  deletion_protection = false
   # IMPORTANT: For production, this should always be `true`.
   deletion_protection = var.environment == "prod" ? true : false
 
@@ -116,17 +105,12 @@ resource "google_sql_database_instance" "main_instance" {
 
 # Create a database within the instance
 resource "google_sql_database" "app_db" {
-  name     = "app-db"
-  instance = google_sql_database_instance.postgres_instance.name
   name     = "app_database" # Use a more descriptive name
   instance = google_sql_database_instance.main_instance.name
 }
 
 # Create a user for the database
 resource "google_sql_user" "app_user" {
-  name     = "app-user"
-  instance = google_sql_database_instance.postgres_instance.name
-  password = random_password.db_password.result
   name     = "app_user" # Use a more descriptive name
   instance = google_sql_database_instance.main_instance.name
   # In production, the password should be stored in a secret manager.
@@ -159,7 +143,6 @@ variable "vpc_network_name" {
 # --- Outputs ---
 
 output "instance_connection_name" {
-  value       = google_sql_database_instance.postgres_instance.connection_name
   value       = google_sql_database_instance.main_instance.connection_name
   description = "The connection name for the Cloud SQL instance, used by the Cloud SQL Auth Proxy."
 }
@@ -167,7 +150,5 @@ output "instance_connection_name" {
 output "database_user_password" {
   value       = random_password.db_password.result
   description = "The generated password for the 'app-user'."
-  # Mark as sensitive to prevent it from being displayed in logs
-  sensitive   = true
   sensitive   = true # Mark as sensitive to prevent it from being displayed in logs
 }
