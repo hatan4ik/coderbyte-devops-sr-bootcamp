@@ -1,250 +1,125 @@
 # Coderbyte DevOps Sr Bootcamp (Production-Grade)
 
-Enterprise-ready training environment for Senior DevOps Engineer Coderbyte-style assignments with production best practices, security hardening, and real-world patterns.
+Enterprise training ground for senior-level DevOps assessments with production patterns, security hardening, and battle-tested labs.
 
-## 🎯 Overview
+## Table of Contents
+- Use This Repository
+- Navigation Shortcuts
+- Baseline Controls
+- Modules at a Glance
+- Quality Gates and Testing
+- Security Baseline (snippets)
+- CI/CD Flow
+- Commands You’ll Use
+- Learning Path
+- Troubleshooting
+- Performance Guardrails
+- Success Criteria
+- References
 
-This repository provides a complete, production-grade training platform organized into 5 comprehensive modules:
+## Use This Repository
+- Start with `CODERBYTE_MASTERY_GUIDE.md` for the zero-to-hero learning path.
+- Keep `INDEX.md` open for deep links to modules, exams, and labs.
+- Follow module-level READMEs while you work; use `practice_examples/` for hands-on reps.
+- Review `ENGINEERING.md` and `SECURITY.md` before submitting any assessment-quality work.
 
-- **Module A** – Zero to Hero (CLI & scripting fundamentals)
-- **Module B** – Mock Exams (timed Coderbyte-style challenges)
-- **Module C** – Full Project (end-to-end DevOps pipeline)
-- **Module D** – Practice Challenges (standalone tasks)
-- **Module E** – Custom Plan (job-specific preparation)
+## Navigation Shortcuts
+- Overview: `ARCHITECTURE.md`
+- Standards and workflows: `ENGINEERING.md`, `BEST_PRACTICES.md`
+- Security posture: `SECURITY.md`
+- Full project guide: `modules/C_full_project/README.md`
+- Mock exam walkthrough (GitOps): `modules/B_mock_exam/exam_03/starter/README.md`
 
-## ✨ Production Features
-
+## Baseline Controls (production defaults)
 ### Security
-- ✅ Multi-stage Docker builds with non-root users
-- ✅ Kubernetes security contexts (seccomp, capabilities)
-- ✅ Network policies for zero-trust networking
-- ✅ Encrypted Terraform state with locking
-- ✅ Automated vulnerability scanning (Trivy, Semgrep)
-- ✅ Secret detection (Gitleaks)
-- ✅ Pre-commit hooks for code quality
+- Multi-stage Docker builds with non-root users
+- Pod security contexts with seccomp and dropped capabilities
+- Network policies enforcing explicit ingress/egress
+- Encrypted Terraform state with locking; secret scanning in CI (Trivy, Semgrep, Gitleaks)
+- Pre-commit hooks for linting, IaC validation, and secret detection
 
-### High Availability
-- ✅ Pod Disruption Budgets (PDB)
-- ✅ Horizontal Pod Autoscaling (HPA)
-- ✅ Anti-affinity rules
-- ✅ Rolling update strategies
-- ✅ Health checks (liveness, readiness, startup)
+### Availability and Resilience
+- Pod Disruption Budgets, anti-affinity, and rolling updates
+- Horizontal Pod Autoscaling with sensible requests/limits
+- Health checks (liveness, readiness, startup) and graceful shutdowns
 
 ### Observability
-- ✅ Structured logging
-- ✅ Prometheus metrics endpoints
-- ✅ Health and readiness probes
-- ✅ CloudWatch integration
-- ✅ Distributed tracing ready
+- Structured logging and Prometheus metrics
+- Health/readiness endpoints and tracing-ready instrumentation
+- CloudWatch integration for AWS examples
 
 ### Infrastructure as Code
-- ✅ Terraform with validation and best practices
-- ✅ Kustomize for environment overlays
-- ✅ ArgoCD for GitOps deployments
-- ✅ Comprehensive CI/CD pipelines
+- Terraform with validation + policy scanning
+- Kustomize overlays per environment
+- ArgoCD-driven GitOps deployments
 
-## 🚀 Quick Start
+## Modules at a Glance
+### Module A: Zero to Hero
+- Bash, Python, and Go fundamentals with production-grade patterns.
+- Run tests: `cd modules/A_zero_to_hero && ./run_tests.sh`
 
-1) Read `CODERBYTE_MASTERY_GUIDE.md` for the zero→hero path and follow the numbered sequence.  
-2) Run labs as you go: see `practice_examples/` and module READMEs for instructions.  
-3) Use `INDEX.md` to jump to modules, exams, or specific labs.  
-4) When ready, attempt the Module B mock exams and the Module C full project.
+### Module B: Mock Exams (10 timed)
+- Realistic Coderbyte-style challenges covering web services, pipelines, cloud, K8s, security, and networking.
+- Example start: `cd modules/B_mock_exam/exam_03 && ./start_exam.sh`
 
-## ✅ Quality Gates
-- **Pre-commit**: run `pre-commit install` to enforce formatting (black/ruff), YAML lint, shell/Docker lint, and Terraform fmt/validate/tflint/tfsec.
-- **CI workflows**: 
-  - `.github/workflows/full-project-ci.yaml` – lint/test/build/scan for Module C.
+### Module C: Full Project
+- Production-ready Python service, hardened Dockerfile, Kubernetes manifests, Terraform stack, and CI/CD pipelines.
+- Run locally: `make docker-build && make docker-run`
+- Deploy: `make k8s-deploy` | Infra: `make terraform-plan`
+
+### Module D: Practice Challenges
+- Standalone exercises that mirror common interview asks (log parsing, API clients, Dockerfile fixes, Terraform, K8s).
+
+### Module E: Custom Plan
+- Skills mapping, gap analysis, and job-specific prep checklists.
+
+## Quality Gates and Testing
+- Pre-commit: `pre-commit install` (black, ruff, yamllint, shellcheck, hadolint, terraform fmt/validate/tflint/tfsec, secret scans).
+- CI workflows:
+  - `.github/workflows/full-project-ci.yaml` – lint, test, build, scan for Module C.
   - `.github/workflows/terraform-checks.yaml` – fmt/validate/tflint/tfsec across Terraform stacks.
-  - `.github/workflows/security-scan.yaml` – Trivy, gitleaks, Semgrep.
-- **Playbook**: see `ENGINEERING.md` for coding standards, CI/CD expectations, and security guidance.
+  - `.github/workflows/security-scan.yaml` – Trivy, Gitleaks, Semgrep.
+- Local testing quick hits:
+  - `make test` (all) | `cd modules/C_full_project && pytest -v`
+  - `make security-scan` | `make lint`
 
-## 📚 Module Structure
-
-### Module A – Zero to Hero
-
-Foundational skills with production-grade implementations:
-
-**Bash Basics** (11 exercises)
-- Text processing, HTTP checks, backups
-- User management, file organization
-- Service monitoring, SSL checks
-- Log rotation, port scanning
-
-**Python Basics** (12 exercises)
-- Log parsing with structured output
-- System health monitoring
-- API clients with error handling
-- Docker SDK automation
-- Concurrency patterns
-
-**Go Basics** (5 exercises)
-- HTTP servers with graceful shutdown
-- Concurrent web crawlers
-- JSON API clients
-
-```bash
-cd modules/A_zero_to_hero
-./run_tests.sh
-```
-
-### Module B – Mock Exams
-
-10 timed exams simulating real Coderbyte challenges:
-
-1. **Web Service + Docker + Terraform + K8s**
-2. **Log Pipeline + S3 + CI**
-3. **GitOps with ArgoCD & Kustomize** ⭐
-4. **IaC Security**
-5. **Advanced CI/CD with Jenkins**
-6. **Cloud Networking & Peering**
-7. **SRE & Observability**
-8. **Container Image Security**
-9. **Linux Systems Debugging**
-10. **Serverless Architecture**
-
-```bash
-cd modules/B_mock_exam/exam_03
-./start_exam.sh
-```
-
-### Module C – Full Project ⭐
-
-Production-ready end-to-end project:
-
-**Application**
-- Python web service with health/metrics endpoints
-- Graceful shutdown handling
-- Structured logging
-- Zero external dependencies
-
-**Docker**
-- Multi-stage builds (60% size reduction)
-- Non-root user (UID 1000)
-- Security scanning ready
-- Health checks built-in
-
-**Kubernetes**
-- Security contexts enforced
-- Resource limits configured
-- Network policies implemented
-- HPA and PDB configured
-- Prometheus annotations
-
-**Terraform**
-- S3 with encryption and versioning
-- IAM with least privilege
-- CloudWatch log groups
-- Lifecycle policies
-- Input validation
-
-**CI/CD**
-- GitHub Actions workflows
-- Security scanning (Trivy, Semgrep)
-- Multi-platform builds
-- Automated deployments
-
-```bash
-cd modules/C_full_project
-
-# Build and run locally
-make docker-build
-make docker-run
-
-# Deploy to Kubernetes
-make k8s-deploy
-
-# Provision infrastructure
-make terraform-init
-make terraform-plan
-```
-
-### Module D – Practice Challenges
-
-Standalone tasks mirroring Coderbyte questions:
-- Log parser with JSON output
-- API client with filtering
-- Dockerfile optimization
-- Terraform S3 bucket
-- Kubernetes deployment fixes
-
-### Module E – Custom Plan
-
-Customize training for specific job descriptions:
-- Skills mapping
-- Gap analysis
-- Custom practice plan
-- Interview preparation
-
-## 🔒 Security Best Practices
-
-### Container Security
+## Security Baseline (snippets)
+### Container
 ```yaml
-# Non-root user
+# Non-root user, read-only FS, least privilege
 USER 1000
-
-# Read-only filesystem
 readOnlyRootFilesystem: true
-
-# Drop all capabilities
 capabilities:
   drop: [ALL]
-
-# Seccomp profile
 seccompProfile:
   type: RuntimeDefault
 ```
 
-### Kubernetes Security
+### Kubernetes
 ```yaml
-# Network policies
 policyTypes: [Ingress, Egress]
-
-# Pod security standards
 runAsNonRoot: true
 allowPrivilegeEscalation: false
-
-# Resource limits
 resources:
   limits:
     cpu: 500m
     memory: 512Mi
 ```
 
-### Infrastructure Security
+### Terraform
 ```hcl
-# Encrypted state
 backend "s3" {
   encrypt = true
 }
 
-# Public access blocked
 block_public_acls = true
 
-# Versioning enabled
 versioning_configuration {
   status = "Enabled"
 }
 ```
 
-## 🧪 Testing
-
-```bash
-# Run all tests
-make test
-
-# Run specific module tests
-cd modules/A_zero_to_hero && ./run_tests.sh
-cd modules/C_full_project && pytest tests/ -v
-
-# Security scanning
-make security-scan
-
-# Lint code
-make lint
-```
-
-## 📊 CI/CD Pipeline
-
+## CI/CD Flow
 ```
 ┌─────────────┐
 │  Git Push   │
@@ -272,130 +147,56 @@ make lint
 └──────────────────┘
 ```
 
-## 📖 Documentation
+## Commands You’ll Use
+- `./menu.sh` – interactive entry point
+- `make setup` – bootstrap tooling
+- `make test` | `make lint` | `make security-scan`
+- `make docker-build` | `make docker-run`
+- `make k8s-deploy`
+- `make terraform-init` | `make terraform-plan`
+- `make clean`
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) - System architecture and design decisions
-- [SECURITY.md](SECURITY.md) - Security policies and best practices
-- [Module C README](modules/C_full_project/README.md) - Full project documentation
-- [Exam 03 README](modules/B_mock_exam/exam_03/starter/README.md) - GitOps guide
+## Learning Path
+- Weeks 1-2: Module A (Bash, Python, Go fundamentals)
+- Weeks 3-4: Module C (full project)
+- Weeks 5-6: Module B exams 1-5
+- Weeks 7-8: Module B exams 6-10
+- Week 9: Module D challenges
+- Week 10: Module E customization and interview prep
 
-## 🛠️ Common Commands
+## Troubleshooting
+### Docker
+- Check daemon: `docker info`
+- Clean artifacts: `docker system prune -a`
 
-```bash
-# Interactive menu
-./menu.sh
+### Kubernetes
+- Cluster health: `kubectl cluster-info`
+- Logs: `kubectl logs -n <namespace> <pod>`
+- Events/describe: `kubectl describe pod <pod>`
 
-# Setup environment
-make setup
+### Terraform
+- Validate: `terraform validate`
+- Inspect state: `terraform show`
+- Refresh: `terraform refresh`
 
-# Run tests
-make test
+## Performance Guardrails
+- Docker image size: ~150MB (slim, non-root, multi-stage)
+- Build time: 2–3 minutes with cache
+- Startup time: <5 seconds
+- Memory footprint: 50–100MB per pod
+- Target test coverage: 80%+
 
-# Build Docker image
-make docker-build
-
-# Deploy to Kubernetes
-make k8s-deploy
-
-# Security scan
-make security-scan
-
-# Clean artifacts
-make clean
-```
-
-## 🎓 Learning Path
-
-1. **Week 1-2**: Module A (Bash, Python, Go basics)
-2. **Week 3-4**: Module C (Full project implementation)
-3. **Week 5-6**: Module B (Mock exams 1-5)
-4. **Week 7-8**: Module B (Mock exams 6-10)
-5. **Week 9**: Module D (Practice challenges)
-6. **Week 10**: Module E (Custom preparation)
-
-## 🔧 Troubleshooting
-
-### Docker Issues
-```bash
-# Check Docker daemon
-docker info
-
-# Clean up
-docker system prune -a
-```
-
-### Kubernetes Issues
-```bash
-# Check cluster
-kubectl cluster-info
-
-# View logs
-kubectl logs -n <namespace> <pod-name>
-
-# Describe resources
-kubectl describe pod <pod-name>
-```
-
-### Terraform Issues
-```bash
-# Validate configuration
-terraform validate
-
-# Check state
-terraform show
-
-# Refresh state
-terraform refresh
-```
-
-## 📈 Performance Metrics
-
-- **Docker Image Size**: 150MB (vs 1GB+ without optimization)
-- **Build Time**: 2-3 minutes (with layer caching)
-- **Startup Time**: < 5 seconds
-- **Memory Footprint**: 50-100MB per pod
-- **Test Coverage**: 80%+
-
-## 🤝 Contributing
-
-This is a training repository. Focus on:
-- Security best practices
-- Production-ready patterns
-- Clear documentation
-- Comprehensive testing
-
-## 📝 License
-
-Educational use only.
-
-## 🎯 Success Criteria
-
-- [ ] Complete all Module A exercises
+## Success Criteria
+- [ ] Complete Module A exercises
 - [ ] Pass 8/10 mock exams
 - [ ] Deploy Module C to production
-- [ ] Implement all security controls
-- [ ] Achieve 80%+ test coverage
-- [ ] Document all decisions
+- [ ] Implement security controls across modules
+- [ ] Maintain 80%+ test coverage
+- [ ] Document decisions and trade-offs
 
-## 🔗 Resources
-
+## References
 - [Kubernetes Best Practices](https://kubernetes.io/docs/concepts/configuration/overview/)
 - [Docker Security](https://docs.docker.com/engine/security/)
 - [Terraform Best Practices](https://www.terraform-best-practices.com/)
 - [12-Factor App](https://12factor.net/)
 - [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-
-## 💡 Tips for Coderbyte Exams
-
-1. **Read requirements carefully** - Note all constraints
-2. **Start with security** - Non-root users, least privilege
-3. **Add health checks** - Liveness and readiness probes
-4. **Resource limits** - Always set requests and limits
-5. **Error handling** - Graceful degradation
-6. **Documentation** - Clear README with examples
-7. **Testing** - Validate before submission
-8. **Time management** - 2-3 hours typical
-
----
-
-**Built with ❤️ for DevOps Engineers preparing for Senior roles**
