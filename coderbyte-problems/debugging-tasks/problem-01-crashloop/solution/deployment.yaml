@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-debug-config
+data:
+  settings.yaml: |
+    message: "config loaded"
+    environment: "demo"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-debug
+  labels:
+    app: api-debug
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: api-debug
+  template:
+    metadata:
+      labels:
+        app: api-debug
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: api
+        image: busybox:1.36
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "cat ${CONFIG_PATH} && while true; do sleep 30; done"]
+        env:
+        - name: CONFIG_PATH
+          value: /config/settings.yaml
+        ports:
+        - name: http
+          containerPort: 8080
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        livenessProbe:
+          exec:
+            command: ["sh", "-c", "cat ${CONFIG_PATH} >/dev/null"]
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        readinessProbe:
+          exec:
+            command: ["sh", "-c", "test -s ${CONFIG_PATH}"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: config
+        configMap:
+          name: api-debug-config

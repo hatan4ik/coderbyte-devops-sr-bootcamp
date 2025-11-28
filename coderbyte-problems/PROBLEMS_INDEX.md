@@ -158,6 +158,7 @@ flake8  pytest  docker  trivy  ghcr   kubectl
 **Time**: 15 min | **Difficulty**: Easy  
 **Skills**: K8s debugging, systematic troubleshooting  
 **Path**: `debugging-tasks/problem-01-crashloop/`
+**Starter**: `starter/broken-deployment.yaml` (missing config triggers crash)
 
 **Debugging Steps**:
 ```bash
