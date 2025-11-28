@@ -326,11 +326,11 @@ Application → OpenTelemetry → Jaeger/Tempo
 5. **ML Ops**: Add model deployment and monitoring capabilities
 
 ## Problem/Solution References (FAANG-style)
-- **Container hardening**: `coderbyte-problems/container-tasks/problem-01-optimize-dockerfile/solution/` — multi-stage, non-root, healthcheck, pinned base.
-- **Pod crash debugging**: `coderbyte-problems/debugging-tasks/problem-01-crashloop/solution/` — ConfigMap fix + probes + non-root.
-- **K8s manifest fixes**: `coderbyte-problems/kubernetes-tasks/problem-01-fix-deployment/solution/deployment.yaml` — probes, limits, securityContext, rolling updates.
-- **GitOps pipeline**: `modules/B_mock_exam/exam_03/` — Kustomize overlays + ArgoCD app.
-- **Terraform security**: `coderbyte-problems/terraform-tasks/problem-01-secure-infrastructure/solution/main.tf` — encryption, public access block, versioning.
-- **CI supply chain**: `practice_examples/container-sbom/` — syft SBOM + cosign signing + Trivy scan.
-- **Observability**: `practice_examples/observability-slo/` — `/metrics`, alerts, tests; `practice_examples/observability-stack/` — full stack deploy.
-- **Policy as code**: `practice_examples/security-policy/` — OPA/Conftest/Kyverno guardrails for K8s and Terraform.
+- **Container hardening**: [`coderbyte-problems/container-tasks/problem-01-optimize-dockerfile/solution/`](coderbyte-problems/container-tasks/problem-01-optimize-dockerfile/solution/) — multi-stage, non-root, healthcheck, pinned base.
+- **Pod crash debugging**: [`coderbyte-problems/debugging-tasks/problem-01-crashloop/solution/`](coderbyte-problems/debugging-tasks/problem-01-crashloop/solution/) — ConfigMap fix + probes + non-root.
+- **K8s manifest fixes**: [`coderbyte-problems/kubernetes-tasks/problem-01-fix-deployment/solution/deployment.yaml`](coderbyte-problems/kubernetes-tasks/problem-01-fix-deployment/solution/deployment.yaml) — probes, limits, securityContext, rolling updates.
+- **GitOps pipeline**: [`modules/B_mock_exam/exam_03/`](modules/B_mock_exam/exam_03/) — Kustomize overlays + ArgoCD app.
+- **Terraform security**: [`coderbyte-problems/terraform-tasks/problem-01-secure-infrastructure/solution/main.tf`](coderbyte-problems/terraform-tasks/problem-01-secure-infrastructure/solution/main.tf) — encryption, public access block, versioning.
+- **CI supply chain**: [`practice_examples/container-sbom/`](practice_examples/container-sbom/) — syft SBOM + cosign signing + Trivy scan.
+- **Observability**: [`practice_examples/observability-slo/`](practice_examples/observability-slo/) — `/metrics`, alerts, tests; [`practice_examples/observability-stack/`](practice_examples/observability-stack/) — full stack deploy.
+- **Policy as code**: [`practice_examples/security-policy/`](practice_examples/security-policy/) — OPA/Conftest/Kyverno guardrails for K8s and Terraform.
