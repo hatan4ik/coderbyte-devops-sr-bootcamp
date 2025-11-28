@@ -27,7 +27,7 @@
 - [Container: Non-Root User](board-problems/security-architect/problem-1/)
 - [SRE: Add Metrics](board-problems/sre-engineer/problem-1/)
 - [K8s: Pod Debugging](coderbyte-problems/debugging-tasks/problem-01-crashloop/)
-- [Script: Log Parser](coderbyte-problems/scripting-tasks/problem-01-log-parser/)
+- [Script: Log Parser](modules/A_zero_to_hero/python-basics/log_parser_01.py)
 
 #### 30-45 Minutes (Standard Practice)
 - [Container: Optimize Dockerfile](coderbyte-problems/container-tasks/problem-01-optimize-dockerfile/)

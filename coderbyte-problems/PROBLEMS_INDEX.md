@@ -28,19 +28,17 @@ USER app
 
 ---
 
-### Problem 2: Debug Crashing Container 🟢
+### Problem 2: Container SBOM & Signing 🟢
 **Time**: 20 min | **Difficulty**: Easy  
-**Skills**: Debugging, logs analysis, troubleshooting  
-**Path**: `container-tasks/problem-02-debug-container/`
+**Skills**: Supply-chain hardening, scanning, signing  
+**Path**: `practice_examples/container-sbom/`
 
-**Scenario**: Container exits immediately after start
+**Scenario**: Harden a build by generating an SBOM, signing the image, and fixing critical CVEs before ship.
 
-**Common Issues**:
-- Missing dependencies
-- Wrong entrypoint
-- Permission errors
-- Port conflicts
-- Resource limits
+**Artifacts**:
+- SBOM generation (syft)
+- Image signing/verification (cosign)
+- Trivy scan results and remediation notes
 
 ---
 
@@ -75,7 +73,7 @@ USER app
 ### Problem 2: Implement GitOps Workflow 🔴
 **Time**: 60 min | **Difficulty**: Hard  
 **Skills**: ArgoCD, Kustomize, GitOps patterns  
-**Path**: `kubernetes-tasks/problem-02-implement-gitops/`
+**Path**: `modules/B_mock_exam/exam_03/`
 
 **Requirements**:
 - Base manifests
@@ -117,7 +115,7 @@ resource "aws_s3_bucket" "data" {
 ### Problem 2: Create Reusable Module 🟡
 **Time**: 35 min | **Difficulty**: Medium  
 **Skills**: Terraform modules, DRY principles  
-**Path**: `terraform-tasks/problem-02-create-module/`
+**Path**: `practice_examples/terraform-vpc/`
 
 ---
 
@@ -148,7 +146,7 @@ flake8  pytest  docker  trivy  ghcr   kubectl
 ### Problem 2: Add Security Scanning 🟡
 **Time**: 30 min | **Difficulty**: Medium  
 **Skills**: Security tools integration  
-**Path**: `cicd-tasks/problem-02-security-scanning/`
+**Path**: `practice_examples/ci-pipeline/github-actions.yaml`
 
 ---
 
@@ -178,18 +176,12 @@ flake8  pytest  docker  trivy  ghcr   kubectl
 
 ---
 
-### Problem 2: Terraform State Lock 🟡
-**Time**: 20 min | **Difficulty**: Medium  
-**Path**: `debugging-tasks/problem-02-state-lock/`
-
----
-
 ## 🔒 Security Tasks
 
 ### Problem 1: Container Security Audit 🟡
 **Time**: 30 min | **Difficulty**: Medium  
 **Skills**: Security scanning, vulnerability remediation  
-**Path**: `security-tasks/problem-01-container-audit/`
+**Path**: `security-tasks/README.md` → `practice_examples/container-sbom/`
 
 **Tools Used**:
 - Trivy (CVE scanning)
@@ -201,7 +193,7 @@ flake8  pytest  docker  trivy  ghcr   kubectl
 
 ### Problem 2: Implement RBAC 🔴
 **Time**: 45 min | **Difficulty**: Hard  
-**Path**: `security-tasks/problem-02-implement-rbac/`
+**Path**: `security-tasks/README.md` → `practice_examples/security-policy/`
 
 ---
 
@@ -210,7 +202,7 @@ flake8  pytest  docker  trivy  ghcr   kubectl
 ### Problem 1: Add Prometheus Metrics 🟡
 **Time**: 35 min | **Difficulty**: Medium  
 **Skills**: Instrumentation, metrics, alerting  
-**Path**: `observability-tasks/problem-01-prometheus-metrics/`
+**Path**: `observability-tasks/README.md` → `practice_examples/observability-slo/`
 
 **Implementation**:
 ```python
@@ -235,7 +227,7 @@ REQUEST_LATENCY = Histogram('http_request_duration_seconds',
 
 ### Problem 2: Implement Distributed Tracing 🔴
 **Time**: 50 min | **Difficulty**: Hard  
-**Path**: `observability-tasks/problem-02-distributed-tracing/`
+**Path**: `observability-tasks/README.md` → `practice_examples/observability-stack/`
 
 ---
 
@@ -244,7 +236,7 @@ REQUEST_LATENCY = Histogram('http_request_duration_seconds',
 ### Problem 1: Log Parser with Error Detection 🟢
 **Time**: 20 min | **Difficulty**: Easy  
 **Skills**: Python/Bash, regex, JSON output  
-**Path**: `scripting-tasks/problem-01-log-parser/`
+**Path**: `modules/A_zero_to_hero/python-basics/log_parser_01.py`
 
 **Requirements**:
 ```python
@@ -264,9 +256,9 @@ REQUEST_LATENCY = Histogram('http_request_duration_seconds',
 
 ---
 
-### Problem 2: Automated Backup Script 🟡
-**Time**: 25 min | **Difficulty**: Medium  
-**Path**: `scripting-tasks/problem-02-backup-script/`
+### Problem 2: HTTP Health Check 🟢
+**Time**: 20 min | **Difficulty**: Easy  
+**Path**: `modules/A_zero_to_hero/bash-basics/http_check_02.sh`
 
 ---
 
