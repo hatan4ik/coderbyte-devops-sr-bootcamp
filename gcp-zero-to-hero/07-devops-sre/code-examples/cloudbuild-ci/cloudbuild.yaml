@@ -1,0 +1,31 @@
+# This is an example cloudbuild.yaml for building and pushing a Docker image.
+
+steps:
+# 1. Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_TAG}',
+    '.'
+  ]
+  id: 'Build'
+
+# 2. Push the container image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_TAG}'
+  ]
+  id: 'Push'
+
+# Define the images to be created. This is used by GCP for security scanning.
+images:
+- '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_TAG}'
+
+# Default substitutions that can be overridden by the trigger.
+substitutions:
+  _REGION: 'us-central1'
+  _REPO_NAME: 'my-docker-repo'
+  _IMAGE_NAME: 'hello-cloud-run'
+  _TAG: 'latest'

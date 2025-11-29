@@ -1,0 +1,7 @@
+{
+  "name": "devops-coderbyte-bootcamp",
+  "image": "mcr.microsoft.com/devcontainers/python:3.10",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  }
+}

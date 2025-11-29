@@ -1,0 +1,117 @@
+name: Advanced Production Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Lint
+        run: |
+          flake8 . --max-line-length=120
+          hadolint Dockerfile
+      
+      - name: Test with Coverage
+        run: |
+          pytest --cov=. --cov-report=xml --cov-fail-under=80
+      
+      - name: Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          exit-code: 1
+          severity: 'CRITICAL,HIGH'
+
+  build:
+    name: Build & Scan
+    needs: quality-gate
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+      
+      - name: Scan image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          exit-code: 1
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Deploy
+        run: |
+          kubectl set image deployment/app app=${{ needs.build.outputs.image-tag }}
+          kubectl rollout status deployment/app -n staging
+      
+      - name: Smoke Tests
+        run: |
+          ./scripts/smoke-test.sh staging
+
+  approval:
+    name: Production Approval
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Wait for approval
+        run: echo "Waiting for manual approval..."
+
+  deploy-production:
+    name: Deploy to Production (Canary)
+    needs: approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Canary Deploy (10%)
+        run: ./scripts/deploy-canary.sh 10
+      
+      - name: Monitor Canary
+        run: ./scripts/monitor-canary.sh
+      
+      - name: Full Rollout
+        run: ./scripts/deploy-canary.sh 100
+      
+      - name: Verify
+        run: ./scripts/smoke-test.sh production
+      
+      - name: Rollback on Failure
+        if: failure()
+        run: ./scripts/rollback.sh
+
+  notify:
+    name: Notify
+    needs: [deploy-production]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Notification
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "status": "${{ job.status }}",
+              "commit": "${{ github.sha }}",
+              "author": "${{ github.actor }}"
+            }

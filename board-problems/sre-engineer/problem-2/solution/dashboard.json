@@ -1,0 +1,44 @@
+{
+  "title": "App Golden Signals",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Latency p90/p99",
+      "targets": [
+        { "expr": "histogram_quantile(0.9, sum(rate(http_request_duration_seconds_bucket{job=\"app\"}[5m])) by (le))" },
+        { "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\"app\"}[5m])) by (le))" }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Error Rate",
+      "targets": [
+        { "expr": "rate(http_requests_total{job=\"app\",status=~\"5..\"}[5m]) / rate(http_requests_total{job=\"app\"}[5m])" }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Traffic",
+      "targets": [
+        { "expr": "rate(http_requests_total{job=\"app\"}[5m])" }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Saturation (CPU)",
+      "targets": [
+        { "expr": "avg(rate(container_cpu_usage_seconds_total{container!=\"\",pod!=\"\",namespace=\"app\"}[5m]))" }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Error Budget Burn (fast/slow)",
+      "targets": [
+        { "expr": "rate(http_requests_total{job=\"app\",status=~\"5..\"}[5m]) / rate(http_requests_total{job=\"app\"}[5m])" },
+        { "expr": "rate(http_requests_total{job=\"app\",status=~\"5..\"}[1h]) / rate(http_requests_total{job=\"app\"}[1h])" }
+      ]
+    }
+  ],
+  "schemaVersion": 27,
+  "editable": true
+}

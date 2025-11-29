@@ -1,0 +1,2 @@
+# Managed via Poetry. Use the root requirements export to install without Poetry.
+-r ../../requirements.txt

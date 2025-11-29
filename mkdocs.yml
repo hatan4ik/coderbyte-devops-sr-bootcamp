@@ -1,0 +1,314 @@
+site_name: Coderbyte DevOps Sr Bootcamp
+site_description: Enterprise-grade DevOps training with FAANG patterns, production security, and battle-tested labs
+site_author: DevOps Community
+site_url: https://nathanels.github.io/coderbyte-devops-sr-bootcamp
+
+repo_name: coderbyte-devops-sr-bootcamp
+repo_url: https://github.com/nathanels/coderbyte-devops-sr-bootcamp
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/nathanels/coderbyte-devops-sr-bootcamp
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  
+  - Getting Started:
+    - Production Guide: PRODUCTION_GUIDE.md
+    - Mastery Guide: CODERBYTE_MASTERY_GUIDE.md
+    - Complete Index: index.md
+    - MkDocs Setup: MKDOCS_SETUP.md
+    - Quick Start: MKDOCS_QUICK_START.md
+  
+  - Training Modules:
+    - Module A - Zero to Hero:
+      - Overview: modules/A_zero_to_hero/README.md
+      - Bash Basics: modules/A_zero_to_hero/bash-basics/README.md
+      - Python Basics: modules/A_zero_to_hero/python-basics/README.md
+      - Go Basics: modules/A_zero_to_hero/go-basics/README.md
+      - Sample Data: modules/A_zero_to_hero/sample_data/README.md
+    - Module B - Mock Exams:
+      - Overview: modules/B_mock_exam/README.md
+      - Exam 01 - Web Service:
+        - Instructions: modules/B_mock_exam/exam_01/instructions.md
+        - Solution: modules/B_mock_exam/exam_01/SOLUTION.md
+      - Exam 02 - Log Pipeline:
+        - Instructions: modules/B_mock_exam/exam_02/instructions.md
+        - Starter: modules/B_mock_exam/exam_02/starter/README.md
+      - Exam 03 - GitOps:
+        - Instructions: modules/B_mock_exam/exam_03/instructions.md
+        - Starter: modules/B_mock_exam/exam_03/starter/README.md
+      - Exam 04 - IaC Security:
+        - Instructions: modules/B_mock_exam/exam_04/instructions.md
+        - Starter: modules/B_mock_exam/exam_04/starter/README.md
+      - Exam 05 - CI/CD:
+        - Instructions: modules/B_mock_exam/exam_05/instructions.md
+        - Starter: modules/B_mock_exam/exam_05/starter/README.md
+      - Exam 06 - Networking:
+        - Instructions: modules/B_mock_exam/exam_06/instructions.md
+        - Starter: modules/B_mock_exam/exam_06/starter/README.md
+      - Exam 07 - SRE:
+        - Instructions: modules/B_mock_exam/exam_07/instructions.md
+        - Starter: modules/B_mock_exam/exam_07/starter/README.md
+      - Exam 08 - Container Security:
+        - Instructions: modules/B_mock_exam/exam_08/instructions.md
+        - Starter: modules/B_mock_exam/exam_08/starter/README.md
+      - Exam 09 - Debugging:
+        - Instructions: modules/B_mock_exam/exam_09/instructions.md
+        - Starter: modules/B_mock_exam/exam_09/starter/README.md
+      - Exam 10 - Serverless:
+        - Instructions: modules/B_mock_exam/exam_10/instructions.md
+        - Starter: modules/B_mock_exam/exam_10/starter/README.md
+    - Module C - Full Project:
+      - Overview: modules/C_full_project/README.md
+      - Deployment Guide: modules/C_full_project/DEPLOY.md
+    - Module D - Practice Challenges: modules/D_practice_challenges/README.md
+    - Module E - Custom Plan:
+      - Overview: modules/E_custom_plan/README.md
+      - Skills Mapping: modules/E_custom_plan/skills_mapping.md
+      - Checklist: modules/E_custom_plan/checklist.md
+      - Job Description: modules/E_custom_plan/job_description.md
+      - JD Plan Template: modules/E_custom_plan/jd_plan_template.md
+    - Module F - Brownfield Scenarios:
+      - Overview: modules/F_brownfield_scenarios/README.md
+      - Terraform State Migration: modules/F_brownfield_scenarios/01-terraform-state-migration/problem.md
+      - Dependency Conflicts: modules/F_brownfield_scenarios/02-dependency-conflicts/problem.md
+      - Legacy Refactor: modules/F_brownfield_scenarios/03-legacy-refactor/problem.md
+  
+  - AWS Solutions Architect:
+    - Overview: aws-solutions-architect/README.md
+    - Complete Guide: aws-solutions-architect/AWS_SOLUTIONS_ARCHITECT_COMPLETE.md
+    - Foundations:
+      - IAM Advanced: aws-solutions-architect/foundations/01-iam-advanced/README.md
+    - Advanced Architectures:
+      - Complete Guide: aws-solutions-architect/advanced-architectures/ADVANCED_ARCHITECTURES_COMPLETE.md
+      - FAANG Patterns: aws-solutions-architect/advanced-architectures/FAANG_PATTERNS_GUIDE.md
+      - Problems Summary: aws-solutions-architect/advanced-architectures/COMPLETE_PROBLEMS_SUMMARY.md
+      - Event-Driven Architecture:
+        - Problem 1 - Ride Sharing: aws-solutions-architect/advanced-architectures/01-event-driven/problem-1/README.md
+        - Problem 2 - Clickstream: aws-solutions-architect/advanced-architectures/01-event-driven/problem-2/README.md
+        - Problem 3 - Travel Booking: aws-solutions-architect/advanced-architectures/01-event-driven/problem-3/README.md
+      - CQRS & Event Sourcing:
+        - Problem 1 - E-commerce: aws-solutions-architect/advanced-architectures/02-cqrs-saga/problem-1/README.md
+        - Problem 2 - Banking: aws-solutions-architect/advanced-architectures/02-cqrs-saga/problem-2/README.md
+        - Problem 3 - Inventory: aws-solutions-architect/advanced-architectures/02-cqrs-saga/problem-3/README.md
+      - Multi-Account Strategy:
+        - Problem 1 - Control Tower: aws-solutions-architect/advanced-architectures/03-multi-account/problem-1/README.md
+        - Problem 2 - Security Hub: aws-solutions-architect/advanced-architectures/03-multi-account/problem-2/README.md
+        - Problem 3 - Centralized Logging: aws-solutions-architect/advanced-architectures/03-multi-account/problem-3/README.md
+      - Hybrid Cloud:
+        - Problem 1 - Direct Connect: aws-solutions-architect/advanced-architectures/04-hybrid-cloud/problem-1/README.md
+        - Problem 2 - VMware Cloud: aws-solutions-architect/advanced-architectures/04-hybrid-cloud/problem-2/README.md
+        - Problem 3 - Edge Computing: aws-solutions-architect/advanced-architectures/04-hybrid-cloud/problem-3/README.md
+    - Cost Optimization:
+      - Rightsizing: aws-solutions-architect/cost-optimization/01-rightsizing/problem-1/README.md
+    - Databases:
+      - DynamoDB Advanced: aws-solutions-architect/databases/02-dynamodb-advanced/problem-1/README.md
+    - Disaster Recovery:
+      - Multi-Region: aws-solutions-architect/disaster-recovery/02-multi-region/problem-1/README.md
+    - Networking:
+      - Transit Gateway: aws-solutions-architect/networking/02-transit-gateway/problem-1/README.md
+    - Serverless:
+      - Step Functions: aws-solutions-architect/serverless/02-step-functions/problem-1/README.md
+  
+  - GCP Zero to Hero:
+    - Overview: gcp-zero-to-hero/README.md
+    - 01 - Foundations:
+      - Overview: gcp-zero-to-hero/01-gcp-foundations/README.md
+      - Problem 1: gcp-zero-to-hero/01-gcp-foundations/problem-01-iam-permissions/task.md
+    - 02 - Compute:
+      - Overview: gcp-zero-to-hero/02-compute/README.md
+      - Problem 1: gcp-zero-to-hero/02-compute/problem-01-create-instance/task.md
+      - Problem 2: gcp-zero-to-hero/02-compute/problem-02-create-instance-tf/task.md
+    - 03 - Storage & Databases:
+      - Overview: gcp-zero-to-hero/03-storage-databases/README.md
+      - Problem 1: gcp-zero-to-hero/03-storage-databases/problem-01-create-bucket/task.md
+      - Problem 2: gcp-zero-to-hero/03-storage-databases/problem-02-create-sql-instance/task.md
+    - 04 - Networking:
+      - Overview: gcp-zero-to-hero/04-networking/README.md
+      - Problem 1: gcp-zero-to-hero/04-networking/problem-01-create-custom-vpc/task.md
+    - 05 - Containers & GKE:
+      - Overview: gcp-zero-to-hero/05-containers-gke/README.md
+      - Problem 1: gcp-zero-to-hero/05-containers-gke/problem-01-create-gke-cluster/task.md
+      - Problem 2: gcp-zero-to-hero/05-containers-gke/problem-02-deploy-application/task.md
+    - 06 - Serverless:
+      - Overview: gcp-zero-to-hero/06-serverless/README.md
+      - Problem 1: gcp-zero-to-hero/06-serverless/problem-01-create-http-function/task.md
+      - Problem 2: gcp-zero-to-hero/06-serverless/problem-02-deploy-to-cloud-run/task.md
+    - 07 - DevOps & SRE:
+      - Overview: gcp-zero-to-hero/07-devops-sre/README.md
+      - Problem 1: gcp-zero-to-hero/07-devops-sre/problem-01-setup-ci-cd/task.md
+      - Problem 2: gcp-zero-to-hero/07-devops-sre/problem-02-create-alerting-policy/task.md
+    - 08 - Security:
+      - Overview: gcp-zero-to-hero/08-security/README.md
+      - Problem 1: gcp-zero-to-hero/08-security/problem-01-secure-bucket/task.md
+      - Problem 2: gcp-zero-to-hero/08-security/problem-02-restrict-vm-access/task.md
+    - 09 - Big Data & ML:
+      - Overview: gcp-zero-to-hero/09-big-data-ml/README.md
+      - Problem 1: gcp-zero-to-hero/09-big-data-ml/problem-01-run-query/task.md
+      - Problem 2: gcp-zero-to-hero/09-big-data-ml/problem-02-train-automl-model/task.md
+  
+  - Board Problems:
+    - Overview: board-problems/README.md
+    - Complete Guide: board-problems/ADVANCED_PROBLEMS_COMPLETE.md
+    - Security Architect:
+      - Overview: board-problems/security-architect/README.md
+      - Problem 1: board-problems/security-architect/problem-1/problem.md
+      - Problem 2: board-problems/security-architect/problem-2/problem.md
+      - Problem 3: board-problems/security-architect/problem-3/problem.md
+    - SRE Engineer:
+      - Overview: board-problems/sre-engineer/README.md
+      - Problem 1: board-problems/sre-engineer/problem-1/problem.md
+      - Problem 3: board-problems/sre-engineer/problem-3/problem.md
+    - Platform Engineer: board-problems/platform-engineer/problem-3/problem.md
+    - Infrastructure Architect: board-problems/infrastructure-architect/problem-3/problem.md
+    - CI/CD Specialist: board-problems/cicd-specialist/problem-3/problem.md
+  
+  - Coderbyte Problems:
+    - Overview: coderbyte-problems/README.md
+    - Problems Index: coderbyte-problems/PROBLEMS_INDEX.md
+    - Container Tasks:
+      - Optimize Dockerfile:
+        - Problem: coderbyte-problems/container-tasks/problem-01-optimize-dockerfile/problem.md
+        - Explanation: coderbyte-problems/container-tasks/problem-01-optimize-dockerfile/explanation.md
+    - Kubernetes Tasks:
+      - Fix Deployment: coderbyte-problems/kubernetes-tasks/problem-01-fix-deployment/problem.md
+    - Terraform Tasks:
+      - Secure Infrastructure: coderbyte-problems/terraform-tasks/problem-01-secure-infrastructure/problem.md
+    - CI/CD Tasks:
+      - Build Pipeline: coderbyte-problems/cicd-tasks/problem-01-build-pipeline/problem.md
+    - Debugging Tasks:
+      - Crashloop:
+        - Problem: coderbyte-problems/debugging-tasks/problem-01-crashloop/problem.md
+        - Solution: coderbyte-problems/debugging-tasks/problem-01-crashloop/solution/README.md
+    - Observability Tasks: coderbyte-problems/observability-tasks/README.md
+    - Security Tasks: coderbyte-problems/security-tasks/README.md
+    - Scripting Tasks: coderbyte-problems/scripting-tasks/README.md
+  
+  - Practice Examples:
+    - AWS Budget: practice_examples/aws-budget/README.md
+    - AWS Security:
+      - 01 - IAM Basics: practice_examples/aws-security/01-iam-basics/README.md
+      - 02 - IAM OIDC: practice_examples/aws-security/02-iam-oidc-role/README.md
+      - 03 - VPC Security: practice_examples/aws-security/03-vpc-network-security/README.md
+      - 04 - CloudTrail GuardDuty: practice_examples/aws-security/04-cloudtrail-guardduty/README.md
+      - 05 - EC2 SSM IMDSv2: practice_examples/aws-security/05-ec2-ssm-imdsv2/README.md
+      - 06 - ECR Lambda: practice_examples/aws-security/06-ecr-lambda-hardening/README.md
+      - 07 - CI/CD Supply Chain: practice_examples/aws-security/07-cicd-supply-chain/README.md
+      - 08 - Incident Response: practice_examples/aws-security/08-incident-response/README.md
+      - 09 - Cross Account IAM: practice_examples/aws-security/09-cross-account-iam/README.md
+      - 10 - ABAC SSO: practice_examples/aws-security/10-abac-sso/README.md
+      - 11 - CodePipeline: practice_examples/aws-security/11-codepipeline-supply-chain/README.md
+      - 12 - Detection Engineering: practice_examples/aws-security/12-detection-engineering/README.md
+      - 13 - SCP Guardrails: practice_examples/aws-security/13-scp-guardrails/README.md
+      - 14 - Secrets Rotation: practice_examples/aws-security/14-secrets-rotation/README.md
+      - 15 - WAF ALB: practice_examples/aws-security/15-waf-alb-firewall/README.md
+      - 16 - SecurityHub Macie: practice_examples/aws-security/16-securityhub-macie/README.md
+    - Bash Top IPs: practice_examples/bash-top-ips/README.md
+    - Chaos Drill: practice_examples/chaos-drill/README.md
+    - CI Pipeline: practice_examples/ci-pipeline/README.md
+    - Container SBOM: practice_examples/container-sbom/README.md
+    - Go HTTP Service: practice_examples/go-http-service/README.md
+    - Helm Policy: practice_examples/helm-policy/README.md
+    - K8s Canary: practice_examples/k8s-canary/README.md
+    - K8s Hardening: practice_examples/k8s-hardening/README.md
+    - K8s Resource Quota: practice_examples/k8s-resource-quota/README.md
+    - Kyverno Supply Chain: practice_examples/kyverno-supply-chain/README.md
+    - Log Streamer: practice_examples/log-streamer/README.md
+    - Networking Debug:
+      - Overview: practice_examples/networking-debug/README.md
+      - DNS Scenario: practice_examples/networking-debug/dns_scenario.md
+      - CNI Misroute: practice_examples/networking-debug/cni-misroute/README.md
+    - Observability SLO: practice_examples/observability-slo/README.md
+    - Observability Stack: practice_examples/observability-stack/README.md
+    - Python Concurrent Fetch: practice_examples/python-concurrent-fetch/README.md
+    - Security Policy: practice_examples/security-policy/README.md
+    - Terraform VPC: practice_examples/terraform-vpc/README.md
+    - Terraform VPC Peering: practice_examples/terraform-vpc-peering/README.md
+  
+  - FAANG Upgrade:
+    - Complete: FAANG_COMPLETE.md
+    - Progress: FAANG_PROGRESS.md
+    - Code Standards: FAANG_CODE_STANDARDS.md
+    - Upgrade Report: FAANG_UPGRADE_REPORT.md
+    - Quick Index: FAANG_INDEX.md
+    - Upgrade Summary: FAANG_UPGRADE_SUMMARY.md
+  
+  - Best Practices:
+    - Production Guide: PRODUCTION_GUIDE.md
+    - Security Baseline: SECURITY.md
+    - Contributing: CONTRIBUTING.md
+    - Benchmarking: benchmarks/README.md
+  
+  - Reference:
+    - Complete Problems Guide: COMPLETE_PROBLEMS_GUIDE.md
+    - Implementation Summary: IMPLEMENTATION_SUMMARY.md
+    - Quorum Board: QUORUM_BOARD.md

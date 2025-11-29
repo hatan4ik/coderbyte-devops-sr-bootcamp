@@ -1,0 +1,76 @@
+name: template-ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: example/app
+  IMAGE_TAG: ${{ github.sha }}
+  REGISTRY: ghcr.io/your-org
+
+jobs:
+  lint_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pre-commit pytest
+      - name: Pre-commit
+        run: pre-commit run --all-files
+      - name: Tests
+        run: |
+          if ls tests 1>/dev/null 2>&1; then pytest -q tests; else echo "No tests/"; fi
+
+  build_scan:
+    needs: lint_test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t "$REGISTRY/$IMAGE_NAME:$IMAGE_TAG" .
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+      - name: Push image (if creds present)
+        if: ${{ secrets.CONTAINER_REGISTRY_TOKEN != '' }}
+        env:
+          REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
+        run: |
+          echo "$REGISTRY_TOKEN" | docker login "$REGISTRY" -u "$GITHUB_ACTOR" --password-stdin
+          docker push "$REGISTRY/$IMAGE_NAME:$IMAGE_TAG"
+
+  terraform_checks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tfdir: [ infra/terraform ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+      - name: Terraform fmt
+        working-directory: ${{ matrix.tfdir }}
+        run: terraform fmt -check -recursive
+      - name: Terraform init
+        working-directory: ${{ matrix.tfdir }}
+        run: terraform init -backend=false
+      - name: Terraform validate
+        working-directory: ${{ matrix.tfdir }}
+        run: terraform validate -no-color
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working-directory: ${{ matrix.tfdir }}

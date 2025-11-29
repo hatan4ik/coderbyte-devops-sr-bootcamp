@@ -1,0 +1,5 @@
+region             = "us-east-1"
+environment        = "dev"
+service_name       = "devops-demo"
+owner              = "platform-team"
+log_retention_days = 14

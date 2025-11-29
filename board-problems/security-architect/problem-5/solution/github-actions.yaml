@@ -1,0 +1,37 @@
+name: container-security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build image
+        run: docker build -t app:ci .
+      - name: Generate SBOM (Syft)
+        uses: anchore/syft-action@v0.17.0
+        with:
+          image: app:ci
+          output: 'sbom.spdx.json'
+      - name: Vulnerability scan (Trivy)
+        uses: aquasecurity/trivy-action@0.22.0
+        with:
+          image-ref: app:ci
+          format: 'table'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.spdx.json
+

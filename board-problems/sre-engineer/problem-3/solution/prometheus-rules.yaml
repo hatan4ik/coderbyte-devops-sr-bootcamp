@@ -1,0 +1,87 @@
+groups:
+  - name: slo_alerts
+    interval: 30s
+    rules:
+      # SLI: Availability
+      - record: sli:availability:ratio_rate5m
+        expr: |
+          sum(rate(http_requests_total{status!~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total[5m]))
+
+      # SLI: Latency (p95)
+      - record: sli:latency:p95
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le)
+          )
+
+      # SLI: Error Rate
+      - record: sli:errors:ratio_rate5m
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total[5m]))
+
+      # Error Budget: 99.9% availability = 0.1% error budget
+      - record: slo:error_budget:remaining
+        expr: |
+          1 - (
+            (1 - sli:availability:ratio_rate5m)
+            /
+            (1 - 0.999)
+          )
+
+      # Fast Burn Rate Alert (2% budget in 1 hour)
+      - alert: ErrorBudgetFastBurn
+        expr: |
+          (
+            sli:errors:ratio_rate5m > (14.4 * 0.001)
+            and
+            sli:errors:ratio_rate5m > (14.4 * 0.001)
+          )
+        for: 2m
+        labels:
+          severity: critical
+          slo: availability
+        annotations:
+          summary: "Fast error budget burn detected"
+          description: "Burning through error budget at 14.4x rate"
+
+      # Slow Burn Rate Alert (10% budget in 24 hours)
+      - alert: ErrorBudgetSlowBurn
+        expr: |
+          (
+            sli:errors:ratio_rate5m > (3 * 0.001)
+            and
+            sli:errors:ratio_rate5m > (3 * 0.001)
+          )
+        for: 15m
+        labels:
+          severity: warning
+          slo: availability
+        annotations:
+          summary: "Slow error budget burn detected"
+          description: "Burning through error budget at 3x rate"
+
+      # Latency SLO Alert
+      - alert: LatencySLOViolation
+        expr: sli:latency:p95 > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          slo: latency
+        annotations:
+          summary: "Latency SLO violated"
+          description: "p95 latency {{ $value }}s exceeds 500ms target"
+
+      # Error Budget Exhausted
+      - alert: ErrorBudgetExhausted
+        expr: slo:error_budget:remaining < 0
+        for: 5m
+        labels:
+          severity: critical
+          slo: availability
+        annotations:
+          summary: "Error budget exhausted"
+          description: "Monthly error budget has been consumed"

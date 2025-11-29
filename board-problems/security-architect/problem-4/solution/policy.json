@@ -1,0 +1,48 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAppBucketReadWrite",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::example-app-bucket",
+        "arn:aws:s3:::example-app-bucket/*"
+      ],
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "true"
+        }
+      }
+    },
+    {
+      "Sid": "DenyWithoutMFAConsole",
+      "Effect": "Deny",
+      "Action": "iam:*",
+      "Resource": "*",
+      "Condition": {
+        "BoolIfExists": {
+          "aws:MultiFactorAuthPresent": "false"
+        },
+        "StringEquals": {
+          "aws:CalledViaFirst": "signin.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "ScopedCloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:us-east-1:123456789012:log-group:/aws/example-app:*"
+    }
+  ]
+}

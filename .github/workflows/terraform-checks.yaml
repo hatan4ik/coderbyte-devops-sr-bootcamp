@@ -1,0 +1,62 @@
+name: Terraform Checks
+
+on:
+  push:
+    paths:
+      - '**/*.tf'
+      - '.github/workflows/terraform-checks.yaml'
+  pull_request:
+    paths:
+      - '**/*.tf'
+      - '.github/workflows/terraform-checks.yaml'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: 1
+    strategy:
+      fail-fast: false
+      matrix:
+        tfdir:
+          - modules/C_full_project/terraform
+          - modules/B_mock_exam/exam_01/starter/terraform
+          - modules/B_mock_exam/exam_02/starter/terraform
+          - modules/B_mock_exam/exam_04/starter/terraform
+          - modules/B_mock_exam/exam_06/starter/terraform
+          - modules/B_mock_exam/exam_10/starter/terraform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform fmt
+        working-directory: ${{ matrix.tfdir }}
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        working-directory: ${{ matrix.tfdir }}
+        run: terraform init -backend=false
+
+      - name: Terraform validate
+        working-directory: ${{ matrix.tfdir }}
+        run: terraform validate -no-color
+
+      - name: Install tflint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          sudo mv tflint /usr/local/bin/tflint
+
+      - name: TFLint
+        working-directory: ${{ matrix.tfdir }}
+        run: tflint --init && tflint
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working-directory: ${{ matrix.tfdir }}
+          additional_args: '--exclude-path "**/.terraform"'

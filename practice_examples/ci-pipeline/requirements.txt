@@ -1,0 +1,1 @@
+# minimal; pytest/ruff/black installed in CI/local

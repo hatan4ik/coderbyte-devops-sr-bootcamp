@@ -1,0 +1,25 @@
+# Exclude patterns for MkDocs
+exclude:
+  - .git/
+  - .github/
+  - .trunk/
+  - .devcontainer/
+  - node_modules/
+  - venv/
+  - __pycache__/
+  - "*.pyc"
+  - .DS_Store
+  - Thumbs.db
+  - site/
+  - .pytest_cache/
+  - .mypy_cache/
+  - .ruff_cache/
+  - "*.log"
+  - "*.tmp"
+  - .terraform/
+  - terraform.tfstate*
+  - .terraformrc
+  - override.tf
+  - override.tf.json
+  - "*_override.tf"
+  - "*_override.tf.json"

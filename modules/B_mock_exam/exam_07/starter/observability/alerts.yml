@@ -1,0 +1,52 @@
+groups:
+  - name: sre_alerts
+    interval: 30s
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(http_errors_total[5m])) by (service)
+            /
+            sum(rate(http_requests_total[5m])) by (service)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          team: sre
+        annotations:
+          summary: "High error rate detected"
+          description: "Service {{ $labels.service }} has error rate above 5% (current: {{ $value | humanizePercentage }})"
+      
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95, 
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service)
+          ) > 1.0
+        for: 10m
+        labels:
+          severity: warning
+          team: sre
+        annotations:
+          summary: "High latency detected"
+          description: "Service {{ $labels.service }} p95 latency is {{ $value }}s (threshold: 1s)"
+      
+      - alert: ServiceDown
+        expr: up{job="sre-demo"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: sre
+        annotations:
+          summary: "Service is down"
+          description: "Service {{ $labels.job }} has been down for 2 minutes"
+      
+      - alert: HighRequestRate
+        expr: |
+          sum(rate(http_requests_total[1m])) by (service) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          team: sre
+        annotations:
+          summary: "High request rate"
+          description: "Service {{ $labels.service }} receiving {{ $value }} req/s"

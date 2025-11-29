@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: slo-burn-rates
+  labels:
+    team: sre
+spec:
+  groups:
+  - name: error-budget
+    rules:
+    - alert: HighErrorBudgetBurn
+      expr: |
+        (
+          rate(http_requests_total{job="app",status=~"5.."}[5m])
+          /
+          rate(http_requests_total{job="app"}[5m])
+        ) > (0.02 * 14.4)
+      for: 5m
+      labels:
+        severity: page
+      annotations:
+        summary: "Error budget burn too fast (5m window)"
+        runbook: "https://runbooks.example.com/app-error-budget"
+    - alert: HighErrorBudgetBurnLong
+      expr: |
+        (
+          rate(http_requests_total{job="app",status=~"5.."}[1h])
+          /
+          rate(http_requests_total{job="app"}[1h])
+        ) > (0.02 * 6)
+      for: 1h
+      labels:
+        severity: ticket
+      annotations:
+        summary: "Error budget burn elevated (1h window)"
+        runbook: "https://runbooks.example.com/app-error-budget"

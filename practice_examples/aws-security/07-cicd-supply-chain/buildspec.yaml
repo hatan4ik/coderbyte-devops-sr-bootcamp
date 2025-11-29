@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "[INSTALL] installing tools"
+      - pip install --no-cache-dir trivy semgrep || true
+  pre_build:
+    commands:
+      - echo "[PRE_BUILD] running trivy filesystem scan"
+      - trivy fs --severity CRITICAL,HIGH --exit-code 1 --timeout 5m . || true
+      - echo "[PRE_BUILD] running semgrep"
+      - semgrep --config p/owasp-top-ten --error || true
+  build:
+    commands:
+      - echo "[BUILD] run your build/test commands here"
+artifacts:
+  files: []

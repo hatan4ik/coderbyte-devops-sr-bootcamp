@@ -1,0 +1,42 @@
+# This YAML file defines a Deployment and a LoadBalancer Service for a sample web app.
+
+# --- Deployment ---
+# This manages the Pods that run our containerized application.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-web
+spec:
+  replicas: 3 # Run 3 instances of our application for availability
+  selector:
+    matchLabels:
+      app: hello # The label the Service will use to find the Pods
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello-app
+        # Use a public sample image from Google
+        image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
+        ports:
+        # The port the application listens on inside the container
+        - containerPort: 8080
+
+---
+
+# --- Service ---
+# This exposes the Pods to the internet via a Cloud Load Balancer.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-web-service
+spec:
+  type: LoadBalancer # Creates an external load balancer
+  selector:
+    app: hello # Directs traffic to Pods with the 'app: hello' label
+  ports:
+  - protocol: TCP
+    port: 80 # The port the public listens on
+    targetPort: 8080 # The port on the Pods to forward traffic to

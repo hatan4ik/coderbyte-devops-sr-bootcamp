@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: app-deny-all
+spec:
+  podSelector:
+    matchLabels:
+      app: app
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: app-allow-egress-dns
+spec:
+  podSelector:
+    matchLabels:
+      app: app
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: UDP
+      port: 53

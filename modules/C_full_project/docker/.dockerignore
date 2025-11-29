@@ -1,0 +1,12 @@
+.git
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.pytest_cache
+*.log
+build/
+dist/
+README.md
+terraform/
+k8s/

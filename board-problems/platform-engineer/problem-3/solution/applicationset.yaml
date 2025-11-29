@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: self-service-templates
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - name: service-a
+        namespace: team-a
+        path: apps/service-template
+      - name: service-b
+        namespace: team-b
+        path: apps/service-template
+  template:
+    metadata:
+      name: "{{name}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/example/gitops-repo.git
+        targetRevision: main
+        path: "{{path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true

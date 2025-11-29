@@ -1,0 +1,5 @@
+region      = "us-east-1"
+environment = "dev"
+owner       = "platform-team"
+bucket_name = "state-refactor-import-demo"
+# kms_key_arn = "arn:aws:kms:us-east-1:123456789012:key/abcd-1234"

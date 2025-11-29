@@ -1,0 +1,1 @@
+../FAANG_CODE_STANDARDS.md

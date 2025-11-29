@@ -1,0 +1,43 @@
+name: blue-green
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-green:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to green
+        run: echo "Deploying to green" # replace with real deploy
+
+  healthcheck-green:
+    needs: deploy-green
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run health checks
+        run: echo "Health checks" # replace with real checks
+
+  switch-traffic:
+    needs: healthcheck-green
+    runs-on: ubuntu-latest
+    steps:
+      - name: Switch to green
+        run: echo "Switch traffic to green" # replace with real switch
+
+  monitor:
+    needs: switch-traffic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Monitor post-cutover
+        run: echo "Monitor green" # replace with real monitoring
+
+  rollback:
+    needs: [healthcheck-green, switch-traffic, monitor]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Roll back to blue
+        run: echo "Rollback to blue" # replace with real rollback

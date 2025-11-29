@@ -1,0 +1,3 @@
+# Python dependencies for the Flask application
+Flask>=2.0
+gunicorn>=20.0

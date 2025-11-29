@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "web-server-01",
+    "status": "running",
+    "cpu": 45.2,
+    "memory": 1024,
+    "region": "us-east-1"
+  },
+  {
+    "id": 2,
+    "name": "database-01",
+    "status": "running",
+    "cpu": 78.5,
+    "memory": 4096,
+    "region": "us-west-2"
+  },
+  {
+    "id": 3,
+    "name": "cache-01",
+    "status": "stopped",
+    "cpu": 0,
+    "memory": 512,
+    "region": "us-east-1"
+  }
+]

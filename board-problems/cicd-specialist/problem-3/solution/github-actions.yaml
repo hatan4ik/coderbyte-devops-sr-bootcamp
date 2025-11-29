@@ -1,0 +1,46 @@
+name: ci-advanced
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Lint
+        run: pylint app.py
+      - name: Test
+        run: pytest -q --cov=.
+      - name: Build
+        run: docker build -t app:${{ github.sha }} .
+
+  security-scan:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy image scan
+        uses: aquasecurity/trivy-action@0.22.0
+        with:
+          image-ref: app:${{ github.sha }}
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+
+  deploy:
+    needs: [build-test, security-scan]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
+      url: https://app.example.com
+    steps:
+      - name: Deploy placeholder
+        run: echo "Deploying app:${{ github.sha }}" # replace with real deploy

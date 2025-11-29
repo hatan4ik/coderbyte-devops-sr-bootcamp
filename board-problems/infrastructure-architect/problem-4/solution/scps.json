@@ -1,0 +1,52 @@
+[
+  {
+    "Sid": "DenyRootAccount",
+    "Effect": "Deny",
+    "Action": "*",
+    "Resource": "*",
+    "Condition": {
+      "StringLike": {
+        "aws:PrincipalArn": "arn:aws:iam::*:root"
+      }
+    }
+  },
+  {
+    "Sid": "RequireSecureTransport",
+    "Effect": "Deny",
+    "Action": "*",
+    "Resource": "*",
+    "Condition": {
+      "Bool": {
+        "aws:SecureTransport": "false"
+      }
+    }
+  },
+  {
+    "Sid": "RestrictRegions",
+    "Effect": "Deny",
+    "Action": "*",
+    "Resource": "*",
+    "Condition": {
+      "StringNotEquals": {
+        "aws:RequestedRegion": [
+          "us-east-1",
+          "us-west-2",
+          "eu-west-1"
+        ]
+      }
+    }
+  },
+  {
+    "Sid": "RequireTags",
+    "Effect": "Deny",
+    "Action": "ec2:RunInstances",
+    "Resource": "*",
+    "Condition": {
+      "Null": {
+        "aws:RequestTag/Owner": "true",
+        "aws:RequestTag/Environment": "true",
+        "aws:RequestTag/CostCenter": "true"
+      }
+    }
+  }
+]

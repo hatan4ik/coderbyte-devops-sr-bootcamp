@@ -1,0 +1,132 @@
+pipeline {
+    agent any
+    
+    parameters {
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag')
+        string(name: 'REGISTRY', defaultValue: 'ghcr.io/org/app', description: 'Container registry')
+    }
+    
+    environment {
+        IMAGE_NAME = "${params.REGISTRY}:${params.IMAGE_TAG}"
+        PYTHON_VERSION = '3.11'
+    }
+    
+    options {
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                sh 'git rev-parse HEAD > .git/commit-id'
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r app/requirements.txt
+                    pip install pytest pytest-cov flake8
+                '''
+            }
+        }
+        
+        stage('Lint') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    flake8 app/ --max-line-length=120 --exclude=venv
+                '''
+            }
+        }
+        
+        stage('Unit Tests') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    pytest tests/ -v --junitxml=test-results.xml --cov=app --cov-report=xml
+                '''
+            }
+            post {
+                always {
+                    junit 'test-results.xml'
+                    publishCoverage adapters: [coberturaAdapter('coverage.xml')]
+                }
+            }
+        }
+        
+        stage('Build Image') {
+            steps {
+                sh "docker build -t ${IMAGE_NAME} -f Dockerfile ."
+            }
+        }
+        
+        stage('Security Scan') {
+            parallel {
+                stage('Trivy Scan') {
+                    steps {
+                        sh """
+                            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                                aquasec/trivy:latest image --severity HIGH,CRITICAL \
+                                --exit-code 1 ${IMAGE_NAME}
+                        """
+                    }
+                }
+                stage('Hadolint') {
+                    steps {
+                        sh 'docker run --rm -i hadolint/hadolint < Dockerfile'
+                    }
+                }
+            }
+        }
+        
+        stage('Push Image') {
+            when {
+                branch 'main'
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'registry-creds', 
+                                                  usernameVariable: 'USER', 
+                                                  passwordVariable: 'PASS')]) {
+                    sh '''
+                        echo $PASS | docker login ${REGISTRY%%/*} -u $USER --password-stdin
+                        docker push ${IMAGE_NAME}
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    sh '''
+                        echo "Deploying ${IMAGE_NAME}"
+                        # kubectl set image deployment/app app=${IMAGE_NAME}
+                        # kubectl rollout status deployment/app
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed!"
+        }
+    }
+}

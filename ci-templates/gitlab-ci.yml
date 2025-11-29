@@ -1,0 +1,68 @@
+stages:
+  - lint
+  - test
+  - build
+  - scan
+  - terraform
+
+variables:
+  IMAGE_NAME: registry.example.com/example/app
+  IMAGE_TAG: $CI_COMMIT_SHA
+
+lint:
+  stage: lint
+  image: python:3.11-slim
+  script:
+    - pip install --upgrade pip
+    - pip install pre-commit
+    - pre-commit run --all-files
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH'
+
+pytest:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt pytest
+    - if [ -d tests ]; then pytest -q tests; else echo "No tests"; fi
+  artifacts:
+    when: always
+    reports:
+      junit: junit.xml
+
+build:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
+    - echo "Built $IMAGE_NAME:$IMAGE_TAG"
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - image.tar
+
+scan:
+  stage: scan
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: ['']
+  script:
+    - trivy image --severity CRITICAL,HIGH --exit-code 1 "$IMAGE_NAME:$IMAGE_TAG"
+  needs: [build]
+
+terraform:
+  stage: terraform
+  image: hashicorp/terraform:1.5.0
+  script:
+    - cd infra/terraform
+    - terraform fmt -check -recursive
+    - terraform init -backend=false
+    - terraform validate -no-color
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH'

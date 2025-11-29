@@ -1,0 +1,29 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-pss-restricted
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: restricted-pod
+    match:
+      resources:
+        kinds:
+        - Pod
+    validate:
+      message: "Pod must comply with restricted security controls."
+      pattern:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: "*"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+              runAsNonRoot: true
